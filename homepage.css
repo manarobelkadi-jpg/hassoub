@@ -42,7 +42,8 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-  background-color: rgba(255, 215, 0, 0.7);
+  /* background-color: rgba(255, 215, 0, 0.7); */
+  background-color: #ffe066;
   border-radius: 2%;
   background-size: cover;
   background-position: center;
@@ -224,8 +225,7 @@ nav a:hover {
 
 /* Features Grid Section */
 .features-grid-section {
-  /* background-color: #e8f5e9; */
-  background-color: rgba(255, 215, 0, 0.7);
+  background-color: #ffe066;
   padding: 50px 20px;
   text-align: center;
 }
@@ -281,7 +281,7 @@ nav a:hover {
 
 /* How It Works Section */
 .how-it-works {
-  background-color: #fff9c4;
+  /* background-color: #fff9c4; */
   padding: 50px 20px;
   text-align: center;
 }
@@ -371,29 +371,6 @@ nav a:hover {
   background-color: #20613d;
   transform: scale(1.05);
 }
-/* Sign Up CTA Section */
-.signup-cta {
-  background-color: rgba(255, 215, 0, 0.7);
-  padding: 40px 20px;
-  text-align: center;
-  border-radius: 15px;
-  margin: 30px auto;
-  max-width: 800px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.cta-title {
-  color: #2e7d32;
-  font-size: 2.2em;
-  margin-bottom: 10px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.cta-subtitle {
-  color: #555;
-  font-size: 1.2em;
-  margin-bottom: 20px;
-}
 
 /* Age Group Selector */
 .age-selector {
@@ -402,6 +379,7 @@ nav a:hover {
   border-radius: 15px;
   margin: 30px auto;
   max-width: 1000px;
+  background-color: #fff9c4;
 }
 
 .age-title {
@@ -490,10 +468,26 @@ nav a:hover {
   font-size: 1.2em;
 }
 
-/* *********colors********* */
-/* 
-green T3 writnig #2e8b57
-hover of green : #20613d
+/* Sign Up CTA Section */
+.signup-cta {
+  background-color: #ffe066;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 15px;
+  margin: 30px auto;
+  max-width: 800px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
 
+.cta-title {
+  color: #2e7d32;
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
 
-*/
+.cta-subtitle {
+  color: #555;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}

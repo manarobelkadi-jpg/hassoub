@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BizVenture Kids - Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="homepage.css" />
+    <link rel="stylesheet" href="responsive.css" />
+    <style>
+      body {
+        /* background-color: #f5f5f5;*/
+      }
+
+      .dashboard-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffe066;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .welcome-message {
+        color: #2e7d32;
+        font-size: 1.8em;
+        font-weight: bold;
+      }
+
+      .notifications {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #f44336;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7em;
+      }
+
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .stat-title {
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+      }
+
+      .stat-value {
+        color: #2e7d32;
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .stat-change {
+        font-size: 0.9em;
+      }
+
+      .positive {
+        color: #4caf50;
+      }
+
+      .negative {
+        color: #f44336;
+      }
+
+      .progress-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .progress-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .progress-title {
+        color: #2e7d32;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+
+      .xp-bar {
+        height: 10px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        margin: 15px 0;
+        overflow: hidden;
+      }
+
+      .xp-fill {
+        height: 100%;
+        background-color: #4caf50;
+        width: 65%;
+      }
+
+      .level-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9em;
+        color: #666;
+      }
+
+      .streak-counter {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .streak-number {
+        color: #ff9800;
+        font-size: 2.5em;
+        font-weight: bold;
+        display: block;
+      }
+
+      .streak-label {
+        color: #666;
+        font-size: 0.9em;
+      }
+
+      .fire-icon {
+        color: #ff9800;
+        font-size: 1.5em;
+        margin: 0 5px;
+      }
+
+      .recommendations {
+        margin-bottom: 30px;
+      }
+
+      .recommendations-title {
+        color: #2e7d32;
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      .recommendations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .recommendation-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+
+      .recommendation-icon {
+        font-size: 2em;
+        color: #4caf50;
+        margin-bottom: 10px;
+      }
+
+      .recommendation-title {
+        color: #2e7d32;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      .recommendation-description {
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 15px;
+      }
+
+      .start-button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .start-button:hover {
+        background-color: #388e3c;
+      }
+
+      .badges-section {
+        margin-bottom: 30px;
+      }
+
+      .badges-title {
+        color: #2e7d32;
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 15px;
+      }
+
+      .badge {
+        background-color: white;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+
+      .badge.locked {
+        background-color: #f5f5f5;
+        opacity: 0.7;
+      }
+
+      .badge-icon {
+        font-size: 2em;
+        color: #4caf50;
+        margin-bottom: 5px;
+      }
+
+      .badge.locked .badge-icon {
+        color: #ccc;
+      }
+
+      .badge-name {
+        font-size: 0.8em;
+        color: #2e7d32;
+        font-weight: bold;
+      }
+
+      .badge.locked .badge-name {
+        color: #999;
+      }
+
+      .lock-icon {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: #ccc;
+        font-size: 0.8em;
+      }
+
+      .recent-activity {
+        margin-bottom: 30px;
+      }
+
+      .activity-title {
+        color: #2e7d32;
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      .activity-list {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+
+      .activity-icon {
+        font-size: 1.2em;
+        margin-right: 15px;
+        color: #4caf50;
+        width: 30px;
+      }
+
+      .activity-content {
+        flex: 1;
+      }
+
+      .activity-time {
+        color: #999;
+        font-size: 0.8em;
+        margin-left: 10px;
+      }
+
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+
+      .action-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .action-icon {
+        font-size: 2em;
+        color: #4caf50;
+        margin-bottom: 10px;
+      }
+
+      .action-title {
+        color: #2e7d32;
+        font-size: 1.1em;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        .dashboard-container {
+          padding: 10px;
+        }
+
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .progress-section {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+      ★ Play. Decide. Grow: The Safe Way to Learn Real Money Skills! ★
+    </div>
+
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <!-- Replace with your logo image -->
+        <img src="your-logo.png" alt="" />
+        Al mo7assib A saghir
+      </div>
+      <nav>
+        <ul>
+          <li><a href="homepage.html">Home</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Games</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="dashboard-container">
+      <div class="header">
+        <h1 class="welcome-message">Welcome back, Johnny!</h1>
+        <div class="notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </div>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-title">Total Profit</div>
+          <div class="stat-value">$1,245</div>
+          <div class="stat-change positive">↑ 12% from last week</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">Businesses Run</div>
+          <div class="stat-value">18</div>
+          <div class="stat-change positive">↑ 4 new this month</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">Learning Score</div>
+          <div class="stat-value">87%</div>
+          <div class="stat-change positive">↑ 5% from last month</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">Time Spent</div>
+          <div class="stat-value">12h 45m</div>
+          <div class="stat-change positive">↑ 2h this week</div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-card">
+          <div class="progress-title">Your Progress</div>
+          <div class="level-info">
+            <span>Level 5</span>
+            <span>6,500 / 10,000 XP</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill" style="width: 65%"></div>
+          </div>
+          <div class="streak-counter">
+            <span class="fire-icon">🔥</span>
+            <span class="streak-number">7</span>
+            <span class="streak-label">day streak</span>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <div class="progress-title">Next Milestone</div>
+          <div class="level-info">
+            <span>Level 6: Toy Tycoon</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill" style="width: 35%"></div>
+          </div>
+          <div style="margin-top: 15px">
+            <div style="font-size: 0.9em; color: #666; margin-bottom: 5px">
+              3,500 XP to go
+            </div>
+            <div style="font-size: 0.9em; color: #666">
+              Unlock: Advanced inventory tools
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendations">
+        <h2 class="recommendations-title">💡 Personalized Recommendations</h2>
+        <div class="recommendations-grid">
+          <div class="recommendation-card">
+            <div class="recommendation-icon">🏪</div>
+            <div class="recommendation-title">Toy Shop Tycoon</div>
+            <div class="recommendation-description">
+              You've mastered the basics! Try managing a toy shop with multiple
+              product lines and seasonal demand.
+            </div>
+            <button class="start-button">Start Scenario</button>
+          </div>
+
+          <div class="recommendation-card">
+            <div class="recommendation-icon">🍋</div>
+            <div class="recommendation-title">Lemonade Empire</div>
+            <div class="recommendation-description">
+              Practice your pricing strategies with this classic business
+              scenario. Perfect for a quick 10-minute session!
+            </div>
+            <button class="start-button">Start Scenario</button>
+          </div>
+
+          <div class="recommendation-card">
+            <div class="recommendation-icon">📊</div>
+            <div class="recommendation-title">Financial Reports</div>
+            <div class="recommendation-description">
+              Learn to read balance sheets and income statements with our
+              interactive financial literacy module.
+            </div>
+            <button class="start-button">Start Lesson</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="badges-section">
+        <h2 class="badges-title">🏆 Your Badges</h2>
+        <div class="badges-grid">
+          <div class="badge">
+            <div class="badge-icon">💰</div>
+            <div class="badge-name">First Profit</div>
+          </div>
+
+          <div class="badge">
+            <div class="badge-icon">🍋</div>
+            <div class="badge-name">Lemonade Master</div>
+          </div>
+
+          <div class="badge locked">
+            <div class="badge-icon">🏆</div>
+            <div class="badge-name">Toy Tycoon</div>
+            <div class="lock-icon">🔒</div>
+          </div>
+
+          <div class="badge locked">
+            <div class="badge-icon">📈</div>
+            <div class="badge-name">Investor</div>
+            <div class="lock-icon">🔒</div>
+          </div>
+
+          <div class="badge">
+            <div class="badge-icon">🕒</div>
+            <div class="badge-name">7-Day Streak</div>
+          </div>
+
+          <div class="badge locked">
+            <div class="badge-icon">🏢</div>
+            <div class="badge-name">Business Mogul</div>
+            <div class="lock-icon">🔒</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recent-activity">
+        <h2 class="activity-title">📜 Recent Activity</h2>
+        <div class="activity-list">
+          <div class="activity-item">
+            <i class="fas fa-trophy activity-icon"></i>
+            <div class="activity-content">
+              <div>Completed "Lemonade Stand" scenario</div>
+            </div>
+            <div class="activity-time">2 hours ago</div>
+          </div>
+
+          <div class="activity-item">
+            <i class="fas fa-coins activity-icon"></i>
+            <div class="activity-content">
+              <div>Earned $125 profit in Toy Shop</div>
+            </div>
+            <div class="activity-time">1 day ago</div>
+          </div>
+
+          <div class="activity-item">
+            <div class="activity-content">
+              <div>Unlocked "First Profit" badge</div>
+            </div>
+            <div class="activity-time">2 days ago</div>
+          </div>
+
+          <div class="activity-item">
+            <i class="fas fa-chart-line activity-icon"></i>
+            <div class="activity-content">
+              <div>Reached Level 5</div>
+            </div>
+            <div class="activity-time">3 days ago</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="action-card" onclick="window.location.href='scenario.html'">
+          <i class="fas fa-play action-icon"></i>
+          <div class="action-title">Start New Scenario</div>
+        </div>
+
+        <div class="action-card" onclick="window.location.href='profile.html'">
+          <i class="fas fa-user action-icon"></i>
+          <div class="action-title">Edit Profile</div>
+        </div>
+
+        <div
+          class="action-card"
+          onclick="window.location.href='leaderboard.html'"
+        >
+          <i class="fas fa-trophy action-icon"></i>
+          <div class="action-title">View Leaderboard</div>
+        </div>
+
+        <div class="action-card" onclick="window.location.href='shop.html'">
+          <i class="fas fa-shopping-cart action-icon"></i>
+          <div class="action-title">Visit Shop</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="your-logo.png" alt="BizVenture Kids Logo" />
+        </div>
+        <nav class="footer-nav">
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Games</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-links">
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms and Conditions</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <div class="contact-info">
+          <p>📞 +47 961 78 807</p>
+          <p>✉️ Info@BizVentureKids.no</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2025 BizVenture Kids. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // This would be replaced with actual API calls in a real implementation
+      function loadUserData() {
+        // Simulate loading user data from API
+        console.log("Loading user data...");
+
+        // Update dynamic elements based on user data
+        // This would be done with actual data in a real app
+      }
+
+      // Call this when the page loads
+      window.onload = loadUserData;
+    </script>
+  </body>
+</html>
