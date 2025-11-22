@@ -1,0 +1,30 @@
+/* Responsive Design */
+
+/* *****Home Page******* */
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero h1 {
+    font-size: 2em;
+  }
+}
+
+/* *****Signup Page******* */
+
+@media (max-width: 768px) {
+  .signup-container {
+    flex-direction: column;
+  }
+
+  .illustration-section {
+    order: -1;
+    min-height: 200px;
+  }
+}

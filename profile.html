@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BizVenture Kids - Profile</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="homepage.css" />
+    <link rel="stylesheet" href="responsive.css" />
+    <style>
+      body {
+        background-color: #f5f5f5;
+      }
+
+      .profile-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .profile-header {
+        background: linear-gradient(135deg, #ffe082, #a5d6a7);
+        padding: 30px;
+        text-align: center;
+        color: #2e7d32;
+      }
+
+      .profile-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #4caf50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3em;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .username {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .level-xp {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .level {
+        font-weight: bold;
+        margin-right: 10px;
+      }
+
+      .xp-bar {
+        width: 200px;
+        height: 10px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        margin: 0 10px;
+        overflow: hidden;
+      }
+
+      .xp-fill {
+        height: 100%;
+        background-color: #4caf50;
+        width: 65%;
+      }
+
+      .member-since {
+        color: #666;
+        font-size: 0.9em;
+      }
+
+      .settings-container {
+        padding: 30px;
+      }
+
+      .settings-section {
+        margin-bottom: 30px;
+      }
+
+      .section-title {
+        font-size: 1.4em;
+        color: #2e7d32;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #ffe082;
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .section-content {
+        display: none;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+      }
+
+      .section-content.active {
+        display: block;
+      }
+
+      .setting-item {
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .setting-label {
+        font-weight: bold;
+        color: #2e7d32;
+      }
+
+      .setting-description {
+        color: #666;
+        font-size: 0.9em;
+        margin-top: 5px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        max-width: 300px;
+      }
+
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 24px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: #4caf50;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+
+      .select-box {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: white;
+        max-width: 300px;
+      }
+
+      .danger-zone {
+        border: 2px solid #ff6347;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #fff8f0;
+      }
+
+      .danger-title {
+        color: #ff6347;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .delete-account {
+        background-color: #ff6347;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .save-btn {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 500px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+        gap: 10px;
+      }
+
+      .cancel-btn {
+        background-color: #e0e0e0;
+        color: #333;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .confirm-btn {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .profile-container {
+          margin: 10px;
+        }
+
+        .profile-header {
+          padding: 20px;
+        }
+
+        .settings-container {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+      ★ Play. Decide. Grow: The Safe Way to Learn Real Money Skills! ★
+    </div>
+
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <!-- Replace with your logo image -->
+        <img src="your-logo.png" alt="" />
+        Al mo7assib A saghir
+      </div>
+      <nav>
+        <ul>
+          <li><a href="homepage.html">Home</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Games</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="profile-container">
+      <div class="profile-header">
+        <div class="profile-card">
+          <div class="avatar">👤</div>
+          <div class="username">Johnny Adventure</div>
+          <div class="level-xp">
+            <span class="level">Level 5</span>
+            <div class="xp-bar">
+              <div class="xp-fill"></div>
+            </div>
+            <span>65%</span>
+          </div>
+          <div class="member-since">Member since June 2023</div>
+        </div>
+      </div>
+
+      <div class="settings-container">
+        <!-- Account Settings -->
+        <div class="settings-section">
+          <div class="section-title" onclick="toggleSection(this)">
+            <span>Account Settings</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="section-content">
+            <div class="setting-item">
+              <div>
+                <div class="setting-label">Change Password</div>
+                <div class="setting-description">
+                  Update your account password
+                </div>
+              </div>
+              <button class="save-btn" onclick="showModal('password-modal')">
+                Change
+              </button>
+            </div>
+
+            <div class="setting-item">
+              <div>
+                <div class="setting-label">Email Preferences</div>
+                <div class="setting-description">
+                  Manage your email notifications
+                </div>
+              </div>
+              <input
+                type="email"
+                value="parent@example.com"
+                placeholder="Parent email"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="settings-section">
+          <div class="section-title" onclick="toggleSection(this)">
+            <span>Game Preferences</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="section-content">
+            <div class="setting-item">
+              <div class="setting-label">Difficulty Level</div>
+              <select class="select-box">
+                <option>Auto-adjust (Recommended)</option>
+                <option>Easy</option>
+                <option>Medium</option>
+                <option>Hard</option>
+              </select>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-label">Notification Settings</div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-label">Sound Effects</div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-label">Dark Mode</div>
+              <label class="toggle-switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-section">
+          <div class="section-title" onclick="toggleSection(this)">
+            <span>Privacy Settings</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="section-content">
+            <div class="setting-item">
+              <div class="setting-label">Profile Visibility</div>
+              <select class="select-box">
+                <option>Public (Visible to all)</option>
+                <option>Friends Only</option>
+                <option>Private (Only me)</option>
+              </select>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-label">Leaderboard Participation</div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-section">
+          <div class="section-title" onclick="toggleSection(this)">
+            <span>Danger Zone</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="section-content danger-zone">
+            <div class="danger-title">Delete Account</div>
+            <div class="setting-description">
+              Permanently delete your account and all associated data.
+            </div>
+            <button class="delete-account" onclick="showModal('delete-modal')">
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="password-modal" class="modal">
+      <div class="modal-content">
+        <h3>Change Password</h3>
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" placeholder="Enter current password" />
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" placeholder="Enter new password" />
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" placeholder="Confirm new password" />
+        </div>
+        <div class="modal-buttons">
+          <button class="cancel-btn" onclick="hideModal('password-modal')">
+            Cancel
+          </button>
+          <button class="confirm-btn" onclick="hideModal('password-modal')">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="delete-modal" class="modal">
+      <div class="modal-content">
+        <h3>Delete Account</h3>
+        <p>
+          Are you sure you want to delete your account? This action cannot be
+          undone.
+        </p>
+        <div class="modal-buttons">
+          <button class="cancel-btn" onclick="hideModal('delete-modal')">
+            Cancel
+          </button>
+          <button class="confirm-btn" onclick="hideModal('delete-modal')">
+            Delete Account
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="your-logo.png" alt="BizVenture Kids Logo" />
+        </div>
+        <nav class="footer-nav">
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Games</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-links">
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms and Conditions</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <div class="contact-info">
+          <p>📞 +47 961 78 807</p>
+          <p>✉️ Info@BizVentureKids.no</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2025 BizVenture Kids. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Toggle sections
+      function toggleSection(element) {
+        const content = element.nextElementSibling;
+        const icon = element.querySelector("i");
+
+        if (content.classList.contains("active")) {
+          content.classList.remove("active");
+          icon.classList.remove("fa-chevron-up");
+          icon.classList.add("fa-chevron-down");
+        } else {
+          content.classList.add("active");
+          icon.classList.remove("fa-chevron-down");
+          icon.classList.add("fa-chevron-up");
+        }
+      }
+
+      // Show modal
+      function showModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+      }
+
+      // Hide modal
+      function hideModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        const modals = document.getElementsByClassName("modal");
+        for (let modal of modals) {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
