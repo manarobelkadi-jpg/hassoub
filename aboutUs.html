@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - BizVenture Kids</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="homepage.css" />
+    <link rel="stylesheet" href="responsive.css" />
+    <style>
+      :root {
+        --primary: #4caf50;
+        --primary-dark: #388e3c;
+        --secondary: #ffe082;
+        --accent: #ff9800;
+        --text: #2e7d32;
+        --text-light: #666;
+        --background: #f5f5f5;
+        --card-bg: #ffffff;
+        --border: #e0e0e0;
+        --correct: #4caf50;
+        --incorrect: #f44336;
+        --highlight: #81d4fa;
+      }
+      body {
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding: 0;
+      }
+      .header {
+        background: linear-gradient(135deg, var(--secondary), #a5d6a7);
+        padding: 30px;
+        text-align: center;
+        color: var(--text);
+      }
+      .header h1 {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .header h1::before {
+        content: "👨‍👩‍👧‍👦";
+        margin-right: 10px;
+      }
+      .header p {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .content {
+        padding: 30px;
+      }
+      .section {
+        margin-bottom: 40px;
+        color: #555;
+      }
+
+      .section strong {
+        color: #2e8b57;
+      }
+
+      .section-title {
+        color: var(--text);
+        font-size: 1.6em;
+        font-weight: bold;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--secondary);
+        display: flex;
+        align-items: center;
+      }
+      .section-title::before {
+        margin-right: 10px;
+      }
+      .mission-section .section-title::before {
+        content: "🎯";
+      }
+      .story-section .section-title::before {
+        content: "📖";
+      }
+      .team-section .section-title::before {
+        content: "👥";
+      }
+      .values-section .section-title::before {
+        content: "⭐";
+      }
+      .testimonials-section .section-title::before {
+        content: "💬";
+      }
+      .content-text {
+        margin-bottom: 20px;
+        line-height: 1.7;
+      }
+      .highlight {
+        background-color: var(--secondary);
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-weight: bold;
+      }
+      .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+      .image-card {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+      }
+      .image-card:hover {
+        transform: translateY(-5px);
+      }
+      .image-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+      .image-caption {
+        background-color: var(--card-bg);
+        padding: 15px;
+        text-align: center;
+        font-weight: 500;
+      }
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+      .team-member {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+      }
+      .team-member:hover {
+        transform: translateY(-5px);
+      }
+      .team-photo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        object-fit: cover;
+        border: 3px solid var(--primary);
+      }
+      .team-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--text);
+      }
+      .team-role {
+        font-size: 0.9em;
+        color: var(--text-light);
+        margin-bottom: 10px;
+      }
+      .team-bio {
+        font-size: 0.9em;
+        line-height: 1.5;
+      }
+      .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+      .value-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .value-icon {
+        font-size: 2em;
+        color: var(--primary);
+        margin-bottom: 15px;
+      }
+      .value-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: var(--text);
+      }
+      .value-description {
+        font-size: 0.9em;
+        color: var(--text-light);
+      }
+      .testimonial {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+      .testimonial::before {
+        content: '"';
+        font-size: 4em;
+        color: var(--secondary);
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        font-family: serif;
+      }
+      .testimonial::after {
+        content: '"';
+        font-size: 4em;
+        color: var(--secondary);
+        position: absolute;
+        bottom: -20px;
+        right: 10px;
+        font-family: serif;
+      }
+      .testimonial-text {
+        margin-bottom: 15px;
+        font-style: italic;
+        line-height: 1.6;
+      }
+      .testimonial-author {
+        font-weight: bold;
+        text-align: right;
+      }
+      .testimonial-role {
+        font-size: 0.9em;
+        color: var(--text-light);
+        text-align: right;
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+      .stat-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .stat-value {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: var(--primary);
+        margin: 10px 0;
+      }
+      .stat-label {
+        color: var(--text-light);
+        font-size: 0.9em;
+      }
+      .cta-section {
+        background: linear-gradient(135deg, var(--secondary), #a5d6a7);
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        margin: 40px 0;
+        color: var(--text);
+      }
+      .cta-button {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1em;
+        margin-top: 20px;
+      }
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .partners-section {
+        text-align: center;
+        margin: 40px 0;
+      }
+      .partners-grid {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin: 30px 0;
+        opacity: 0.7;
+      }
+      .partner-logo {
+        height: 60px;
+        filter: grayscale(100%);
+        transition: all 0.3s;
+      }
+      .partner-logo:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+      }
+      @media (max-width: 768px) {
+        .image-grid {
+          grid-template-columns: 1fr;
+        }
+        .team-grid {
+          grid-template-columns: 1fr;
+        }
+        .values-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+        .partners-grid {
+          gap: 20px;
+        }
+        .partner-logo {
+          height: 50px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+      ★ Play. Decide. Grow: The Safe Way to Learn Real Money Skills! ★
+    </div>
+
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <!-- Replace with your logo image -->
+        <img src="your-logo.png" alt="" />
+        Al mo7assib A saghir
+      </div>
+      <nav>
+        <ul>
+          <li><a href="homepage.html">Home</a></li>
+          <li><a href="aboutUs.html">About Us</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="header">
+        <h1>About BizVenture Kids</h1>
+        <p>
+          Empowering young minds with practical financial education through
+          interactive simulations and real-world business scenarios.
+        </p>
+      </div>
+
+      <div class="content">
+        <!-- Mission Section -->
+        <div class="section mission-section">
+          <div class="section-title">Our Mission</div>
+          <div class="content-text">
+            At <span class="highlight">BizVenture Kids</span>, we believe that
+            financial literacy is one of the most important life skills children
+            can learn. Our mission is to make financial education
+            <strong>engaging, practical, and fun</strong> for kids aged 8-15
+            through interactive business simulations.
+          </div>
+          <div class="content-text">
+            We create safe, game-based learning environments where children can:
+          </div>
+          <ul style="margin: 20px 0 20px 30px">
+            <li>Run virtual businesses and make real financial decisions</li>
+            <li>
+              Learn about revenue, expenses, profit, and loss in a risk-free
+              setting
+            </li>
+            <li>Develop critical thinking and problem-solving skills</li>
+            <li>Gain confidence in making financial choices</li>
+            <li>Understand the value of money and resources</li>
+          </ul>
+          <div class="content-text">
+            Our simulations are designed to be
+            <strong>age-appropriate, educational, and entertaining</strong>,
+            helping kids develop essential money management skills that will
+            serve them throughout their lives.
+          </div>
+        </div>
+
+        <!-- Our Story Section -->
+        <div class="section story-section">
+          <div class="section-title">Our Story</div>
+          <div class="content-text">
+            BizVenture Kids was founded in 2020 by a team of educators, parents,
+            and financial experts who noticed a critical gap in financial
+            education for children. While schools teach math and basic
+            economics, most kids graduate without understanding how to:
+          </div>
+
+          <div class="image-grid">
+            <div class="image-card">
+              <img
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="Kids learning together"
+              />
+              <div class="image-caption">Learning through play</div>
+            </div>
+            <div class="image-card">
+              <img
+                src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80"
+                alt="Kids with piggy bank"
+              />
+              <div class="image-caption">Financial literacy starts young</div>
+            </div>
+            <div class="image-card">
+              <img
+                src="https://images.unsplash.com/photo-1577896851231-70ef88d22354?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="Kids with lemonade stand"
+              />
+              <div class="image-caption">Real-world business experience</div>
+            </div>
+          </div>
+
+          <div class="content-text">
+            <ul style="margin: 20px 0 20px 30px">
+              <li>Manage money in real-life situations</li>
+              <li>Make informed spending decisions</li>
+              <li>Understand how businesses work</li>
+              <li>Develop entrepreneurial thinking</li>
+            </ul>
+          </div>
+          <div class="content-text">
+            We set out to create a solution that would make financial education
+            <strong>interactive, engaging, and relevant</strong> to kids' lives.
+            Our simulations allow children to experience the thrill of running a
+            business, the challenge of making tough financial decisions, and the
+            satisfaction of seeing their efforts pay off - all in a safe,
+            game-like environment.
+          </div>
+          <div class="content-text">
+            Since our launch, we've helped thousands of children in over 20
+            countries develop financial confidence and business acumen. Our
+            platform continues to grow with new simulations, learning paths, and
+            educational resources.
+          </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="section team-section">
+          <div class="section-title">Meet Our Team</div>
+          <div class="content-text">
+            Our diverse team combines expertise in education, finance, child
+            development, and technology to create the best possible learning
+            experience for kids.
+          </div>
+
+          <div class="team-grid">
+            <div class="team-member">
+              <img
+                src="https://randomuser.me/api/portraits/women/44.jpg"
+                alt="Sarah Johnson"
+                class="team-photo"
+              />
+              <div class="team-name">Sarah Johnson</div>
+              <div class="team-role">Founder & CEO</div>
+              <div class="team-bio">
+                Former elementary school teacher with 15 years of experience in
+                child education. Passionate about making learning fun and
+                accessible.
+              </div>
+            </div>
+
+            <div class="team-member">
+              <img
+                src="https://randomuser.me/api/portraits/men/32.jpg"
+                alt="Michael Chen"
+                class="team-photo"
+              />
+              <div class="team-name">Michael Chen</div>
+              <div class="team-role">CTO & Game Designer</div>
+              <div class="team-bio">
+                Game development expert with a background in educational
+                technology. Specializes in creating engaging learning
+                experiences.
+              </div>
+            </div>
+
+            <div class="team-member">
+              <img
+                src="https://randomuser.me/api/portraits/women/68.jpg"
+                alt="Emily Rodriguez"
+                class="team-photo"
+              />
+              <div class="team-name">Emily Rodriguez</div>
+              <div class="team-role">Curriculum Director</div>
+              <div class="team-bio">
+                Financial educator with a master's in childhood development.
+                Designs our age-appropriate financial lessons.
+              </div>
+            </div>
+
+            <div class="team-member">
+              <img
+                src="https://randomuser.me/api/portraits/men/75.jpg"
+                alt="David Kim"
+                class="team-photo"
+              />
+              <div class="team-name">David Kim</div>
+              <div class="team-role">Financial Expert</div>
+              <div class="team-bio">
+                Former investment banker turned educator. Ensures our
+                simulations reflect real-world financial principles.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Values Section -->
+        <div class="section values-section">
+          <div class="section-title">Our Core Values</div>
+          <div class="content-text">
+            Everything we do at BizVenture Kids is guided by our core values:
+          </div>
+
+          <div class="values-grid">
+            <div class="value-card">
+              <div class="value-icon">🎮</div>
+              <div class="value-title">Learning Through Play</div>
+              <div class="value-description">
+                We believe kids learn best when they're having fun. Our
+                simulations turn financial education into engaging games.
+              </div>
+            </div>
+
+            <div class="value-card">
+              <div class="value-icon">💡</div>
+              <div class="value-title">Real-World Relevance</div>
+              <div class="value-description">
+                Our content connects to actual financial situations kids will
+                encounter, preparing them for real life.
+              </div>
+            </div>
+
+            <div class="value-card">
+              <div class="value-icon">🛡️</div>
+              <div class="value-title">Safe Experimentation</div>
+              <div class="value-description">
+                Kids can make financial decisions and learn from mistakes
+                without real-world consequences.
+              </div>
+            </div>
+
+            <div class="value-card">
+              <div class="value-icon">👶</div>
+              <div class="value-title">Age-Appropriate</div>
+              <div class="value-description">
+                Our content is carefully designed for different age groups,
+                ensuring it's always understandable and relevant.
+              </div>
+            </div>
+
+            <div class="value-card">
+              <div class="value-icon">🌍</div>
+              <div class="value-title">Accessible to All</div>
+              <div class="value-description">
+                We strive to make financial education available to children
+                everywhere, regardless of background.
+              </div>
+            </div>
+
+            <div class="value-card">
+              <div class="value-icon">📈</div>
+              <div class="value-title">Measurable Progress</div>
+              <div class="value-description">
+                Kids and parents can track learning progress with clear metrics
+                and achievements.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Impact Section -->
+        <div class="section">
+          <div class="section-title">Our Impact</div>
+          <div class="content-text">
+            Since our launch, we've been thrilled to see the positive impact our
+            program has had on children's financial literacy:
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value">12,000+</div>
+              <div class="stat-label">Kids using our platform</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">20+</div>
+              <div class="stat-label">Countries reached</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">500+</div>
+              <div class="stat-label">Schools using our curriculum</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">85%</div>
+              <div class="stat-label">
+                Parents report improved financial confidence
+              </div>
+            </div>
+          </div>
+
+          <div class="image-grid">
+            <div class="image-card">
+              <img
+                src="https://images.unsplash.com/photo-1523242651086-28590188f9f7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="Classroom learning"
+              />
+              <div class="image-caption">Used in classrooms worldwide</div>
+            </div>
+            <div class="image-card">
+              <img
+                src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="Kids with tablets"
+              />
+              <div class="image-caption">Digital learning for modern kids</div>
+            </div>
+            <div class="image-card">
+              <img
+                src="https://images.unsplash.com/photo-1596461404969-9ae70f2834c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="Happy kid with money"
+              />
+              <div class="image-caption">Building financial confidence</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonials Section -->
+        <div class="section testimonials-section">
+          <div class="section-title">What People Say</div>
+
+          <div class="testimonial">
+            <div class="testimonial-text">
+              BizVenture Kids has transformed how my students engage with
+              financial concepts. The simulations make abstract ideas concrete
+              and fun. I've seen remarkable improvement in their understanding
+              of money management!
+            </div>
+            <div class="testimonial-author">Mrs. Thompson</div>
+            <div class="testimonial-role">5th Grade Teacher, Chicago</div>
+          </div>
+
+          <div class="testimonial">
+            <div class="testimonial-text">
+              My son used to think money was just for spending, but after using
+              BizVenture Kids, he's started talking about saving, investing, and
+              even starting his own little business! The change in his mindset
+              has been amazing.
+            </div>
+            <div class="testimonial-author">Carlos M.</div>
+            <div class="testimonial-role">Parent, Miami</div>
+          </div>
+
+          <div class="testimonial">
+            <div class="testimonial-text">
+              I love how the simulations let me try different business ideas
+              without worrying about losing real money. I've learned so much
+              about how businesses actually work - it's like having my own
+              company!
+            </div>
+            <div class="testimonial-author">Aisha K.</div>
+            <div class="testimonial-role">Student, Age 12</div>
+          </div>
+
+          <div class="testimonial">
+            <div class="testimonial-text">
+              As a financial advisor, I wish I had something like BizVenture
+              Kids when I was growing up. It teaches practical financial skills
+              in a way that's actually engaging for children. I recommend it to
+              all my clients with kids.
+            </div>
+            <div class="testimonial-author">James W.</div>
+            <div class="testimonial-role">Financial Advisor, New York</div>
+          </div>
+        </div>
+
+        <!-- Partners Section -->
+        <div class="section partners-section">
+          <div class="section-title">Our Partners</div>
+          <div class="content-text">
+            We're proud to work with these organizations to bring financial
+            education to more children:
+          </div>
+
+          <div class="partners-grid">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png"
+              alt="Google for Education"
+              class="partner-logo"
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/UNICEF_logo.svg/1200px-UNICEF_logo.svg.png"
+              alt="UNICEF"
+              class="partner-logo"
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Junior_Achievement_logo.svg/1200px-Junior_Achievement_logo.svg.png"
+              alt="Junior Achievement"
+              class="partner-logo"
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Khan_Academy_logo_2017.svg/1200px-Khan_Academy_logo_2017.svg.png"
+              alt="Khan Academy"
+              class="partner-logo"
+            />
+          </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+          <h2 style="font-size: 1.8em; margin-bottom: 15px">
+            Ready to Start the Financial Adventure?
+          </h2>
+          <p
+            style="
+              margin-bottom: 20px;
+              max-width: 600px;
+              margin-left: auto;
+              margin-right: auto;
+            "
+          >
+            Join thousands of kids who are learning essential money skills
+            through our engaging business simulations.
+          </p>
+          <button
+            class="cta-button"
+            onclick="window.location.href='dashboard.html'"
+          >
+            Get Started Now
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="your-logo.png" alt="BizVenture Kids Logo" />
+        </div>
+        <nav class="footer-nav">
+          <ul>
+            <li><a href="homepage.html">Home</a></li>
+            <li><a href="aboutUs.html">About Us</a></li>
+            <li><a href="quiz.html">Quiz</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-links">
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms and Conditions</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <div class="contact-info">
+          <p>📞 +47 961 78 807</p>
+          <p>✉️ Info@BizVentureKids.no</p>
+          <p>📍 Oslo, Norway</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2025 BizVenture Kids. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Achievements - BizVenture Kids</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="homepage.css" />
+    <link rel="stylesheet" href="responsive.css" />
+    <style>
+      :root {
+        --primary: #4caf50;
+        --primary-dark: #388e3c;
+        --secondary: #ffe082;
+        --accent: #ff9800;
+        --text: #2e7d32;
+        --text-light: #666;
+        --background: #f5f5f5;
+        --card-bg: #ffffff;
+        --border: #e0e0e0;
+        --correct: #4caf50;
+        --incorrect: #f44336;
+        --highlight: #81d4fa;
+      }
+      body {
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding: 0;
+      }
+      .header {
+        background: linear-gradient(135deg, var(--secondary), #a5d6a7);
+        padding: 30px;
+        text-align: center;
+        color: var(--text);
+      }
+      .header h1 {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .header h1::before {
+        content: "🏅";
+        margin-right: 10px;
+      }
+      .header p {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .content {
+        padding: 30px;
+      }
+      .section-title {
+        color: var(--text);
+        font-size: 1.6em;
+        font-weight: bold;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--secondary);
+      }
+      .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      .badge-card {
+        background-color: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      .badge-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .badge-card.earned {
+        border-color: var(--primary);
+        background-color: rgba(76, 175, 80, 0.05);
+      }
+      .badge-card.locked {
+        opacity: 0.7;
+        background-color: #f5f5f5;
+      }
+      .badge-card.almost {
+        border-color: var(--accent);
+        background-color: rgba(255, 152, 0, 0.05);
+      }
+      .badge-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 10px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8em;
+        color: white;
+        position: relative;
+      }
+      .badge-icon.earned {
+        background-color: var(--primary);
+      }
+      .badge-icon.locked {
+        background-color: #ccc;
+      }
+      .badge-icon.almost {
+        background-color: var(--accent);
+      }
+      .badge-lock {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2em;
+        color: rgba(0, 0, 0, 0.7);
+      }
+      .badge-title {
+        font-weight: 500;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+      }
+      .badge-description {
+        font-size: 0.8em;
+        color: var(--text-light);
+        margin-bottom: 8px;
+      }
+      .badge-progress {
+        font-size: 0.7em;
+        color: var(--text-light);
+      }
+      .category-tabs {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+      .tab {
+        padding: 10px 20px;
+        margin: 0 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+      }
+      .tab.active {
+        background-color: var(--primary);
+        color: white;
+      }
+      .tab:not(.active) {
+        background-color: var(--secondary);
+        color: var(--text);
+      }
+      .recent-achievements {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .achievement-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .achievement-item:last-child {
+        border-bottom: none;
+      }
+      .achievement-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2em;
+        color: white;
+        flex-shrink: 0;
+      }
+      .achievement-icon.earned {
+        background-color: var(--primary);
+      }
+      .achievement-content {
+        flex: 1;
+      }
+      .achievement-title {
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+      .achievement-meta {
+        font-size: 0.8em;
+        color: var(--text-light);
+      }
+      .achievement-time {
+        font-size: 0.8em;
+        color: var(--text-light);
+        min-width: 100px;
+        text-align: right;
+      }
+      .stats-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      .stat-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .stat-value {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: var(--primary);
+        margin: 10px 0;
+      }
+      .stat-label {
+        color: var(--text-light);
+        font-size: 0.9em;
+      }
+      .filter-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .search-box {
+        padding: 10px 15px;
+        border: 1px solid var(--border);
+        border-radius: 25px;
+        width: 250px;
+        max-width: 100%;
+      }
+      .sort-options {
+        display: flex;
+        align-items: center;
+      }
+      .sort-options select {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-left: 10px;
+      }
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .modal {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+      .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: var(--text-light);
+      }
+      .modal-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5em;
+        color: white;
+        background-color: var(--primary);
+      }
+      .modal-title {
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: var(--text);
+      }
+      .modal-description {
+        text-align: center;
+        margin-bottom: 20px;
+        color: var(--text-light);
+      }
+      .modal-details {
+        margin-bottom: 20px;
+      }
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .detail-label {
+        font-weight: 500;
+      }
+      .detail-value {
+        color: var(--text-light);
+      }
+      .modal-progress {
+        height: 10px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        margin: 15px 0;
+        overflow: hidden;
+      }
+      .modal-progress-bar {
+        height: 100%;
+        background-color: var(--primary);
+        border-radius: 5px;
+        width: 0%;
+        transition: width 0.5s ease;
+      }
+      .share-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .share-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .share-button:hover {
+        background-color: var(--primary);
+        color: white;
+      }
+      .unlock-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle,
+          rgba(76, 175, 80, 0.3) 0%,
+          transparent 70%
+        );
+        border-radius: 10px;
+        animation: unlockPulse 1.5s ease-out;
+        pointer-events: none;
+        display: none;
+      }
+      @keyframes unlockPulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(1.5);
+          opacity: 0;
+        }
+      }
+      .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .category-title {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: var(--text);
+      }
+      .category-count {
+        color: var(--text-light);
+        font-size: 0.9em;
+      }
+      @media (max-width: 768px) {
+        .badges-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stats-summary {
+          grid-template-columns: 1fr;
+        }
+        .category-tabs {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .tab {
+          margin: 5px 0;
+          border-radius: 10px;
+        }
+        .filter-controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .search-box {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+        .sort-options {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+      ★ Play. Decide. Grow: The Safe Way to Learn Real Money Skills! ★
+    </div>
+
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <!-- Replace with your logo image -->
+        <img src="your-logo.png" alt="" />
+        Al mo7assib A saghir
+      </div>
+      <nav>
+        <ul>
+           <li><a href="homepage.html">Home</a></li>
+          <li><a href="aboutUs.html">About Us</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="container">
+      <div class="header">
+        <h1>Your Achievements</h1>
+        <p>
+          Celebrate your accomplishments! View the badges you've earned and
+          discover what you can achieve next in your financial education
+          journey.
+        </p>
+      </div>
+
+      <div class="content">
+        <!-- Stats Summary -->
+        <div class="stats-summary">
+          <div class="stat-card">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Badges Earned</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">24</div>
+            <div class="stat-label">Total Available</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">1,200</div>
+            <div class="stat-label">XP from Badges</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">6</div>
+            <div class="stat-label">Almost There!</div>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+          <div class="category-tabs">
+            <div class="tab active" onclick="changeCategory('all')">
+              All Badges
+            </div>
+            <div class="tab" onclick="changeCategory('earned')">Earned</div>
+            <div class="tab" onclick="changeCategory('almost')">
+              Almost There
+            </div>
+            <div class="tab" onclick="changeCategory('locked')">Locked</div>
+          </div>
+          <div style="display: flex; align-items: center">
+            <input
+              type="text"
+              class="search-box"
+              placeholder="Search badges..."
+              onkeyup="searchBadges()"
+            />
+            <div class="sort-options">
+              <span>Sort by:</span>
+              <select onchange="sortBadges()">
+                <option value="recent">Most Recent</option>
+                <option value="name">Name</option>
+                <option value="difficulty">Difficulty</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badge Categories -->
+        <div id="all-badges">
+          <!-- Business Basics -->
+          <div class="category-header">
+            <div class="category-title">📚 Business Basics</div>
+            <div class="category-count">4 of 8 badges earned</div>
+          </div>
+          <div class="badges-grid">
+            <div
+              class="badge-card earned"
+              onclick="showBadgeDetails('first-lesson')"
+            >
+              <div class="badge-icon earned">📖</div>
+              <div class="badge-title">First Lesson</div>
+              <div class="badge-description">Complete your first lesson</div>
+            </div>
+
+            <div
+              class="badge-card earned"
+              onclick="showBadgeDetails('quiz-master')"
+            >
+              <div class="badge-icon earned">✅</div>
+              <div class="badge-title">Quiz Master</div>
+              <div class="badge-description">Score 100% on 3 quizzes</div>
+            </div>
+
+            <div
+              class="badge-card almost"
+              onclick="showBadgeDetails('profit-pro')"
+            >
+              <div class="badge-icon almost">💰</div>
+              <div class="badge-title">Profit Pro</div>
+              <div class="badge-description">
+                Calculate profit correctly 5 times
+              </div>
+              <div class="badge-progress">3/5 completed</div>
+            </div>
+
+            <div
+              class="badge-card earned"
+              onclick="showBadgeDetails('budget-beginner')"
+            >
+              <div class="badge-icon earned">💵</div>
+              <div class="badge-title">Budget Beginner</div>
+              <div class="badge-description">Create your first budget</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Financial Forecaster</div>
+              <div class="badge-description">Predict 3 months of finances</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Business Planner</div>
+              <div class="badge-description">Complete 5 business plans</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Market Researcher</div>
+              <div class="badge-description">Analyze 3 market scenarios</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Business Strategist</div>
+              <div class="badge-description">Develop 3 business strategies</div>
+            </div>
+          </div>
+
+          <!-- Simulation Success -->
+          <div class="category-header" style="margin-top: 40px">
+            <div class="category-title">🎮 Simulation Success</div>
+            <div class="category-count">3 of 6 badges earned</div>
+          </div>
+          <div class="badges-grid">
+            <div
+              class="badge-card earned"
+              onclick="showBadgeDetails('first-simulation')"
+            >
+              <div class="badge-icon earned">🏆</div>
+              <div class="badge-title">First Simulation</div>
+              <div class="badge-description">
+                Complete your first business simulation
+              </div>
+            </div>
+
+            <div
+              class="badge-card earned"
+              onclick="showBadgeDetails('profit-master')"
+            >
+              <div class="badge-icon earned">💰</div>
+              <div class="badge-title">Profit Master</div>
+              <div class="badge-description">
+                Make $100+ profit in a simulation
+              </div>
+            </div>
+
+            <div
+              class="badge-card almost"
+              onclick="showBadgeDetails('customer-service')"
+            >
+              <div class="badge-icon almost">😊</div>
+              <div class="badge-title">Customer Service Star</div>
+              <div class="badge-description">
+                Achieve 5-star rating in 3 simulations
+              </div>
+              <div class="badge-progress">2/3 completed</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Tycoon</div>
+              <div class="badge-description">
+                Earn $500+ profit in a simulation
+              </div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Perfect Score</div>
+              <div class="badge-description">
+                Get 100% score in any simulation
+              </div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Simulation Marathon</div>
+              <div class="badge-description">
+                Complete 5 different simulations
+              </div>
+            </div>
+          </div>
+
+          <!-- Learning Streaks -->
+          <div class="category-header" style="margin-top: 40px">
+            <div class="category-title">🔥 Learning Streaks</div>
+            <div class="category-count">1 of 4 badges earned</div>
+          </div>
+          <div class="badges-grid">
+            <div
+              class="badge-card earned"
+              onclick="showBadgeDetails('first-streak')"
+            >
+              <div class="badge-icon earned">🔥</div>
+              <div class="badge-title">First Streak</div>
+              <div class="badge-description">Learn 3 days in a row</div>
+            </div>
+
+            <div
+              class="badge-card almost"
+              onclick="showBadgeDetails('weekly-streak')"
+            >
+              <div class="badge-icon almost">📅</div>
+              <div class="badge-title">Weekly Learner</div>
+              <div class="badge-description">Learn 5 days in one week</div>
+              <div class="badge-progress">3/5 days</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Monthly Master</div>
+              <div class="badge-description">Learn 20 days in one month</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Dedicated Learner</div>
+              <div class="badge-description">30-day learning streak</div>
+            </div>
+          </div>
+
+          <!-- Financial Expertise -->
+          <div class="category-header" style="margin-top: 40px">
+            <div class="category-title">💼 Financial Expertise</div>
+            <div class="category-count">0 of 6 badges earned</div>
+          </div>
+          <div class="badges-grid">
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Savings Champion</div>
+              <div class="badge-description">
+                Save $1,000 in virtual accounts
+              </div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Investment Novice</div>
+              <div class="badge-description">
+                Make your first virtual investment
+              </div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Credit Wise</div>
+              <div class="badge-description">Understand credit scores</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Tax Aware</div>
+              <div class="badge-description">Complete tax lesson</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Insurance Expert</div>
+              <div class="badge-description">Learn about 3 insurance types</div>
+            </div>
+
+            <div class="badge-card locked">
+              <div class="badge-icon locked">
+                <div class="badge-lock">🔒</div>
+              </div>
+              <div class="badge-title">Retirement Ready</div>
+              <div class="badge-description">Plan for virtual retirement</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Achievements -->
+        <div class="section-title">Recent Achievements</div>
+        <div class="recent-achievements">
+          <div class="achievement-item">
+            <div class="achievement-icon earned">🏆</div>
+            <div class="achievement-content">
+              <div class="achievement-title">First Simulation Completed</div>
+              <div class="achievement-meta">
+                Toy Shop Tycoon with $120 profit
+              </div>
+            </div>
+            <div class="achievement-time">2 days ago</div>
+          </div>
+
+          <div class="achievement-item">
+            <div class="achievement-icon earned">✅</div>
+            <div class="achievement-content">
+              <div class="achievement-title">Quiz Master</div>
+              <div class="achievement-meta">
+                Perfect scores on 3 accounting quizzes
+              </div>
+            </div>
+            <div class="achievement-time">5 days ago</div>
+          </div>
+
+          <div class="achievement-item">
+            <div class="achievement-icon earned">🔥</div>
+            <div class="achievement-content">
+              <div class="achievement-title">5-Day Learning Streak</div>
+              <div class="achievement-meta">
+                Consistent learning for 5 consecutive days
+              </div>
+            </div>
+            <div class="achievement-time">1 week ago</div>
+          </div>
+
+          <div class="achievement-item">
+            <div class="achievement-icon earned">📖</div>
+            <div class="achievement-content">
+              <div class="achievement-title">First Lesson Completed</div>
+              <div class="achievement-meta">
+                Introduction to Business Basics
+              </div>
+            </div>
+            <div class="achievement-time">2 weeks ago</div>
+          </div>
+
+          <div class="achievement-item">
+            <div class="achievement-icon earned">💰</div>
+            <div class="achievement-content">
+              <div class="achievement-title">Profit Master</div>
+              <div class="achievement-meta">
+                Earned $100+ profit in Toy Shop simulation
+              </div>
+            </div>
+            <div class="achievement-time">2 weeks ago</div>
+          </div>
+        </div>
+
+        <!-- Next Achievements -->
+        <div class="section-title">Next Achievements to Unlock</div>
+        <div class="badges-grid">
+          <div
+            class="badge-card almost"
+            onclick="showBadgeDetails('profit-pro')"
+          >
+            <div class="badge-icon almost">💰</div>
+            <div class="badge-title">Profit Pro</div>
+            <div class="badge-description">
+              Calculate profit correctly 5 times
+            </div>
+            <div class="badge-progress">3/5 completed</div>
+          </div>
+
+          <div
+            class="badge-card almost"
+            onclick="showBadgeDetails('weekly-streak')"
+          >
+            <div class="badge-icon almost">📅</div>
+            <div class="badge-title">Weekly Learner</div>
+            <div class="badge-description">Learn 5 days in one week</div>
+            <div class="badge-progress">3/5 days</div>
+          </div>
+
+          <div
+            class="badge-card almost"
+            onclick="showBadgeDetails('customer-service')"
+          >
+            <div class="badge-icon almost">😊</div>
+            <div class="badge-title">Customer Service Star</div>
+            <div class="badge-description">
+              Achieve 5-star rating in 3 simulations
+            </div>
+            <div class="badge-progress">2/3 completed</div>
+          </div>
+
+          <div class="badge-card locked">
+            <div class="badge-icon locked">
+              <div class="badge-lock">🔒</div>
+            </div>
+            <div class="badge-title">Tycoon</div>
+            <div class="badge-description">
+              Earn $500+ profit in a simulation
+            </div>
+          </div>
+
+          <div class="badge-card locked">
+            <div class="badge-icon locked">
+              <div class="badge-lock">🔒</div>
+            </div>
+            <div class="badge-title">Financial Forecaster</div>
+            <div class="badge-description">Predict 3 months of finances</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal" id="badgeModal">
+        <div class="modal-close" onclick="closeModal()">&times;</div>
+        <div class="modal-icon" id="modalIcon">🏆</div>
+        <div class="modal-title" id="modalTitle">Achievement Unlocked!</div>
+        <div class="modal-description" id="modalDescription">
+          You've earned this badge by completing specific challenges in your
+          learning journey.
+        </div>
+
+        <div class="modal-details">
+          <div class="detail-item">
+            <div class="detail-label">Requirements</div>
+            <div class="detail-value" id="modalRequirements">
+              Complete specific tasks
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Progress</div>
+            <div class="detail-value" id="modalProgress">100% completed</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Earned</div>
+            <div class="detail-value" id="modalEarnedDate">
+              December 15, 2024
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">XP Bonus</div>
+            <div class="detail-value" id="modalXP">+100 XP</div>
+          </div>
+        </div>
+
+        <div class="modal-progress">
+          <div
+            class="modal-progress-bar"
+            id="modalProgressBar"
+            style="width: 100%"
+          ></div>
+        </div>
+
+        <div class="share-buttons">
+          <div class="share-button" title="Share on Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </div>
+          <div class="share-button" title="Share on Twitter">
+            <i class="fab fa-twitter"></i>
+          </div>
+          <div class="share-button" title="Share via Email">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="share-button" title="Download Badge">
+            <i class="fas fa-download"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="your-logo.png" alt="BizVenture Kids Logo" />
+        </div>
+        <nav class="footer-nav">
+          <ul>
+           <li><a href="homepage.html">Home</a></li>
+          <li><a href="aboutUs.html">About Us</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-links">
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms and Conditions</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <div class="contact-info">
+          <p>📞 +47 961 78 807</p>
+          <p>✉️ Info@BizVentureKids.no</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2025 BizVenture Kids. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Badge data
+      const badges = {
+        "first-lesson": {
+          title: "First Lesson",
+          icon: "📖",
+          description: "Complete your first lesson in the program",
+          requirements: "Complete any lesson module",
+          progress: "1/1 completed",
+          earned: "May 10, 2025",
+          xp: 50,
+          category: "Business Basics",
+        },
+        "quiz-master": {
+          title: "Quiz Master",
+          icon: "✅",
+          description: "Score 100% on 3 quizzes",
+          requirements: "Achieve perfect scores on 3 different quizzes",
+          progress: "3/3 completed",
+          earned: "May 12, 2025",
+          xp: 100,
+          category: "Business Basics",
+        },
+        "profit-pro": {
+          title: "Profit Pro",
+          icon: "💰",
+          description: "Calculate profit correctly 5 times",
+          requirements:
+            "Complete 5 profit calculation exercises with 100% accuracy",
+          progress: "3/5 completed",
+          earned: null,
+          xp: 75,
+          category: "Business Basics",
+        },
+        "budget-beginner": {
+          title: "Budget Beginner",
+          icon: "💵",
+          description: "Create your first budget",
+          requirements: "Successfully complete a budget creation exercise",
+          progress: "1/1 completed",
+          earned: "May 15, 2025",
+          xp: 60,
+          category: "Business Basics",
+        },
+        "first-simulation": {
+          title: "First Simulation",
+          icon: "🏆",
+          description: "Complete your first business simulation",
+          requirements:
+            "Finish any business simulation with at least $1 profit",
+          progress: "1/1 completed",
+          earned: "May 18, 2025",
+          xp: 120,
+          category: "Simulation Success",
+        },
+        "profit-master": {
+          title: "Profit Master",
+          icon: "💰",
+          description: "Make $100+ profit in a simulation",
+          requirements:
+            "Achieve $100 or more profit in any business simulation",
+          progress: "1/1 completed",
+          earned: "May 20, 2025",
+          xp: 150,
+          category: "Simulation Success",
+        },
+        "customer-service": {
+          title: "Customer Service Star",
+          icon: "😊",
+          description: "Achieve 5-star rating in 3 simulations",
+          requirements:
+            "Get 5-star customer ratings in 3 different simulations",
+          progress: "2/3 completed",
+          earned: null,
+          xp: 90,
+          category: "Simulation Success",
+        },
+        "first-streak": {
+          title: "First Streak",
+          icon: "🔥",
+          description: "Learn 3 days in a row",
+          requirements:
+            "Complete at least one learning activity for 3 consecutive days",
+          progress: "3/3 completed",
+          earned: "May 22, 2025",
+          xp: 80,
+          category: "Learning Streaks",
+        },
+        "weekly-streak": {
+          title: "Weekly Learner",
+          icon: "📅",
+          description: "Learn 5 days in one week",
+          requirements:
+            "Complete learning activities on 5 different days in a single week",
+          progress: "3/5 days",
+          earned: null,
+          xp: 100,
+          category: "Learning Streaks",
+        },
+      };
+
+      // Current category
+      let currentCategory = "all";
+
+      // Show badge details modal
+      function showBadgeDetails(badgeId) {
+        const badge = badges[badgeId];
+        if (!badge) return;
+
+        const modal = document.getElementById("badgeModal");
+        const overlay = document.getElementById("modalOverlay");
+
+        document.getElementById("modalIcon").textContent = badge.icon;
+        document.getElementById("modalTitle").textContent = badge.title;
+        document.getElementById("modalDescription").textContent =
+          badge.description;
+        document.getElementById("modalRequirements").textContent =
+          badge.requirements;
+        document.getElementById("modalProgress").textContent = badge.progress;
+        document.getElementById("modalEarnedDate").textContent =
+          badge.earned || "Not yet earned";
+        document.getElementById("modalXP").textContent = `+${badge.xp} XP`;
+
+        // Calculate progress percentage
+        const progressMatch = badge.progress.match(/(\d+)\/(\d+)/);
+        if (progressMatch) {
+          const current = parseInt(progressMatch[1]);
+          const total = parseInt(progressMatch[2]);
+          const percentage = (current / total) * 100;
+          document.getElementById(
+            "modalProgressBar"
+          ).style.width = `${percentage}%`;
+        } else {
+          document.getElementById("modalProgressBar").style.width = badge.earned
+            ? "100%"
+            : "0%";
+        }
+
+        overlay.style.display = "flex";
+        modal.style.animation = "modalFadeIn 0.3s";
+
+        // Add unlock animation if just earned
+        if (!badge.earned) {
+          const badgeElement = document.querySelector(
+            `.badge-card[onclick="showBadgeDetails('${badgeId}')"]`
+          );
+          if (badgeElement) {
+            const unlockAnim = document.createElement("div");
+            unlockAnim.className = "unlock-animation";
+            badgeElement.appendChild(unlockAnim);
+            unlockAnim.style.display = "block";
+
+            setTimeout(() => {
+              unlockAnim.remove();
+            }, 1500);
+          }
+        }
+      }
+
+      // Close modal
+      function closeModal() {
+        const overlay = document.getElementById("modalOverlay");
+        const modal = document.getElementById("badgeModal");
+
+        modal.style.animation = "modalFadeOut 0.3s";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 300);
+      }
+
+      // Change category
+      function changeCategory(category) {
+        // Remove active class from all tabs
+        document.querySelectorAll(".tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+
+        // Add active class to selected tab
+        event.target.classList.add("active");
+        currentCategory = category;
+
+        // Show/hide badge categories
+        document
+          .querySelectorAll(".category-header, .badges-grid")
+          .forEach((el) => {
+            el.style.display = "none";
+          });
+
+        if (category === "all") {
+          document.getElementById("all-badges").style.display = "block";
+        } else {
+          // This would be implemented if we had separate category divs
+          document.getElementById("all-badges").style.display = "block";
+        }
+      }
+
+      // Search badges
+      function searchBadges() {
+        const searchTerm = document
+          .querySelector(".search-box")
+          .value.toLowerCase();
+        const badgeCards = document.querySelectorAll(".badge-card");
+
+        badgeCards.forEach((card) => {
+          const title = card
+            .querySelector(".badge-title")
+            .textContent.toLowerCase();
+          const description = card
+            .querySelector(".badge-description")
+            .textContent.toLowerCase();
+
+          if (title.includes(searchTerm) || description.includes(searchTerm)) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      }
+
+      // Sort badges
+      function sortBadges() {
+        const sortValue = document.querySelector(".sort-options select").value;
+        const container = document.getElementById("all-badges");
+        const categories = container.querySelectorAll(
+          ".category-header + .badges-grid"
+        );
+
+        categories.forEach((category) => {
+          const badges = Array.from(category.querySelectorAll(".badge-card"));
+          const sortedBadges = [];
+
+          if (sortValue === "name") {
+            badges.sort((a, b) => {
+              const aTitle = a.querySelector(".badge-title").textContent;
+              const bTitle = b.querySelector(".badge-title").textContent;
+              return aTitle.localeCompare(bTitle);
+            });
+          } else if (sortValue === "difficulty") {
+            // Simple sort by XP (higher XP = more difficult)
+            badges.sort((a, b) => {
+              const aId = a.getAttribute("onclick").match(/'([^']+)'/)[1];
+              const bId = b.getAttribute("onclick").match(/'([^']+)'/)[1];
+              return (badges[bId]?.xp || 0) - (badges[aId]?.xp || 0);
+            });
+          }
+
+          // Re-append sorted badges
+          badges.forEach((badge) => {
+            category.appendChild(badge);
+          });
+        });
+      }
+
+      // Close modal when clicking outside
+      document
+        .getElementById("modalOverlay")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeModal();
+          }
+        });
+
+      // Close modal with Escape key
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+
+      // Add CSS animations
+      const style = document.createElement("style");
+      style.textContent = `
+        @keyframes modalFadeIn {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalFadeOut {
+          from { opacity: 1; transform: translateY(0); }
+          to { opacity: 0; transform: translateY(-20px); }
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>

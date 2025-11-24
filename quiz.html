@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knowledge Assessment - BizVenture Kids</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="homepage.css" />
+    <link rel="stylesheet" href="responsive.css" />
+    <style>
+      :root {
+        --primary: #4caf50;
+        --primary-dark: #388e3c;
+        --secondary: #ffe082;
+        --accent: #ff9800;
+        --text: #2e7d32;
+        --text-light: #666;
+        --background: #f5f5f5;
+        --card-bg: #ffffff;
+        --border: #e0e0e0;
+        --correct: #4caf50;
+        --incorrect: #f44336;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--text);
+      }
+      .quiz-container {
+        max-width: 800px;
+        margin: 30px auto;
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+      }
+      .quiz-header {
+        background: linear-gradient(135deg, var(--secondary), #a5d6a7);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text);
+      }
+      .question-counter {
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      .timer {
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      .quiz-content {
+        padding: 30px;
+        min-height: 400px;
+      }
+      .question-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: opacity 0.5s;
+      }
+      .question-hidden {
+        display: none;
+        opacity: 0;
+      }
+      .question-visible {
+        display: flex;
+        opacity: 1;
+      }
+      .question-illustration {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+        background-color: var(--secondary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3em;
+        color: var(--text);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .question-text {
+        font-size: 1.4em;
+        font-weight: bold;
+        margin-bottom: 25px;
+        text-align: center;
+      }
+      .options-container {
+        width: 100%;
+        max-width: 500px;
+        color: #666;
+      }
+      .option {
+        background-color: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+      }
+      .option:hover {
+        background-color: #f9f9f9;
+      }
+      .option.selected {
+        background-color: var(--secondary);
+        border-color: var(--primary);
+      }
+      .option.correct {
+        background-color: rgba(76, 175, 80, 0.2);
+        border-color: var(--correct);
+      }
+      .option.incorrect {
+        background-color: rgba(244, 67, 54, 0.1);
+        border-color: var(--incorrect);
+      }
+      .option-radio {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+      .option.selected .option-radio {
+        border-color: var(--primary);
+      }
+      .option.correct .option-radio {
+        border-color: var(--correct);
+        background-color: var(--correct);
+      }
+      .option.incorrect .option-radio {
+        border-color: var(--incorrect);
+        background-color: var(--incorrect);
+      }
+      .option-radio::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-color: var(--primary);
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .option.selected .option-radio::after {
+        opacity: 1;
+      }
+      .option-text {
+        flex: 1;
+      }
+      .feedback {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .feedback.correct {
+        display: block;
+        background-color: rgba(76, 175, 80, 0.2);
+        color: var(--correct);
+      }
+      .feedback.incorrect {
+        display: block;
+        background-color: rgba(244, 67, 54, 0.1);
+        color: var(--incorrect);
+      }
+      .xp-award {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin-top: 10px;
+        color: var(--accent);
+      }
+      .submit-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 20px auto;
+        display: block;
+        transition: all 0.3s;
+      }
+      .submit-btn:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+      .submit-btn:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .progress-container {
+        padding: 20px;
+        text-align: center;
+      }
+      .progress-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .progress-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--border);
+      }
+      .progress-dot.active {
+        background-color: var(--primary);
+      }
+      .progress-dot.completed {
+        background-color: var(--primary-dark);
+      }
+      .results-container {
+        display: none;
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .results-visible {
+        display: block;
+      }
+      .results-icon {
+        font-size: 4em;
+        color: var(--primary);
+        margin-bottom: 20px;
+      }
+      .results-title {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: var(--text);
+      }
+      .results-score {
+        font-size: 2em;
+        font-weight: bold;
+        color: var(--primary);
+        margin-bottom: 10px;
+      }
+      .results-xp {
+        font-size: 1.2em;
+        color: var(--accent);
+        margin-bottom: 20px;
+      }
+      .results-feedback {
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+      .results-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .results-btn:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+      .shake {
+        animation: shake 0.5s;
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-5px);
+        }
+        40%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+      @media (max-width: 768px) {
+        .quiz-container {
+          margin: 10px;
+          border-radius: 0;
+        }
+        .question-text {
+          font-size: 1.2em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+      ★ Play. Decide. Grow: The Safe Way to Learn Real Money Skills! ★
+    </div>
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <!-- Replace with your logo image -->
+        <img src="your-logo.png" alt="" />
+        Al mo7assib A saghir
+      </div>
+      <nav>
+        <ul>
+          <li><a href="homepage.html">Home</a></li>
+          <li><a href="aboutUs.html">About Us</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="quiz-container">
+      <div class="quiz-header">
+        <div class="question-counter">
+          Question <span id="question-number">1</span> of 10
+        </div>
+        <div class="timer">Time: <span id="timer">2:45</span></div>
+      </div>
+      <div class="quiz-content">
+        <!-- Question 1: What is profit? -->
+        <div class="question-container question-visible" id="question-1">
+          <div class="question-illustration">💰</div>
+          <div class="question-text">What is profit?</div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 1)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">A) Money earned</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 1)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">B) Revenue minus expenses</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 1)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">C) Total sales</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 1)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">D) Money saved</div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-1"></div>
+          <button class="submit-btn" onclick="submitAnswer(1)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 2: True/False -->
+        <div class="question-container question-hidden" id="question-2">
+          <div class="question-illustration">📉</div>
+          <div class="question-text">
+            True or False: Expenses are the same as revenue.
+          </div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 2)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">A) True</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 2)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">B) False</div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-2"></div>
+          <button class="submit-btn" onclick="submitAnswer(2)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 3: Fill in the Blank -->
+        <div class="question-container question-hidden" id="question-3">
+          <div class="question-illustration">💸</div>
+          <div class="question-text">
+            The formula for profit is: Profit = Revenue - __________
+          </div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 3)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">A) Sales</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 3)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">B) Expenses</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 3)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">C) Income</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 3)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">D) Savings</div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-3"></div>
+          <button class="submit-btn" onclick="submitAnswer(3)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 4: Image-based -->
+        <div class="question-container question-hidden" id="question-4">
+          <div class="question-illustration">📊</div>
+          <div class="question-text">
+            Which graph shows increasing profit over time?
+          </div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 4)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">
+                A) <span style="color: #f44336">↘</span> Downward line
+              </div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 4)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">
+                B) <span style="color: #2196f3">→</span> Flat line
+              </div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 4)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">
+                C) <span style="color: #4caf50">↗</span> Upward line
+              </div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 4)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">
+                D) <span style="color: #ff9800">↕</span> Zigzag line
+              </div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-4"></div>
+          <button class="submit-btn" onclick="submitAnswer(4)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 5: Best saving strategy -->
+        <div class="question-container question-hidden" id="question-5">
+          <div class="question-illustration">💰</div>
+          <div class="question-text">Which is the BEST way to save money?</div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 5)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">
+                A) Spend all your allowance immediately
+              </div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 5)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">
+                B) Keep all your money in your pocket
+              </div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 5)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">
+                C) Set aside a portion of your money regularly
+              </div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 5)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">
+                D) Only save when you have extra money
+              </div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-5"></div>
+          <button class="submit-btn" onclick="submitAnswer(5)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 6: Budget purpose -->
+        <div class="question-container question-hidden" id="question-6">
+          <div class="question-illustration">📝</div>
+          <div class="question-text">What is the main purpose of a budget?</div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 6)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">A) To limit your spending</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 6)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">B) To plan how to use your money</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 6)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">C) To track only your expenses</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 6)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">D) To hide money from others</div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-6"></div>
+          <button class="submit-btn" onclick="submitAnswer(6)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 7: Fixed vs variable costs -->
+        <div class="question-container question-hidden" id="question-7">
+          <div class="question-illustration">🏠</div>
+          <div class="question-text">Which is an example of a fixed cost?</div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 7)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">A) Cost of ingredients</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 7)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">B) Monthly rent</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 7)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">C) Electricity bill</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 7)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">D) Employee wages</div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-7"></div>
+          <button class="submit-btn" onclick="submitAnswer(7)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 8: Revenue definition -->
+        <div class="question-container question-hidden" id="question-8">
+          <div class="question-illustration">💵</div>
+          <div class="question-text">What is revenue?</div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 8)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">A) Money spent on supplies</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 8)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">B) Money saved in the bank</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 8)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">C) Money earned from sales</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 8)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">D) Money borrowed from others</div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-8"></div>
+          <button class="submit-btn" onclick="submitAnswer(8)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 9: Break-even point -->
+        <div class="question-container question-hidden" id="question-9">
+          <div class="question-illustration">⚖️</div>
+          <div class="question-text">What does "break-even" mean?</div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 9)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">A) When you make a loss</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 9)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">B) When you make a big profit</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 9)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">C) When revenue equals expenses</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 9)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">D) When you run out of money</div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-9"></div>
+          <button class="submit-btn" onclick="submitAnswer(9)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Question 10: Investment purpose -->
+        <div class="question-container question-hidden" id="question-10">
+          <div class="question-illustration">📈</div>
+          <div class="question-text">Why do people invest money?</div>
+          <div class="options-container">
+            <div
+              class="option"
+              onclick="selectOption(this, 10)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">A) To lose money quickly</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 10)"
+              data-correct="true"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">B) To grow their money over time</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 10)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">C) To hide money from taxes</div>
+            </div>
+            <div
+              class="option"
+              onclick="selectOption(this, 10)"
+              data-correct="false"
+            >
+              <div class="option-radio"></div>
+              <div class="option-text">D) To buy things immediately</div>
+            </div>
+          </div>
+          <div class="feedback" id="feedback-10"></div>
+          <button class="submit-btn" onclick="submitAnswer(10)">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="results-container" id="results-screen">
+          <div class="results-icon">🏆</div>
+          <div class="results-title">Quiz Complete!</div>
+          <div class="results-score" id="final-score">You scored: 0/10</div>
+          <div class="results-xp" id="final-xp">+0 XP Earned</div>
+          <div class="results-feedback" id="final-feedback"></div>
+          <button
+            class="results-btn"
+            onclick="window.location.href='dashboard.html'"
+          >
+            Return to Dashboard
+          </button>
+        </div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-dots" id="progress-dots">
+          <!-- Dots will be added by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="your-logo.png" alt="BizVenture Kids Logo" />
+        </div>
+        <nav class="footer-nav">
+          <ul>
+            <li><a href="homepage.html">Home</a></li>
+            <li><a href="aboutUs.html">About Us</a></li>
+            <li><a href="quiz.html">Quiz</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-links">
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms and Conditions</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <div class="contact-info">
+          <p>📞 +47 961 78 807</p>
+          <p>✉️ Info@BizVentureKids.no</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2025 BizVenture Kids. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Quiz data for all 10 questions
+      const quizData = [
+        {
+          question: "What is profit?",
+          correct: 1, // B) Revenue minus expenses
+          xp: 10,
+        },
+        {
+          question: "True or False: Expenses are the same as revenue.",
+          correct: 1, // B) False
+          xp: 10,
+        },
+        {
+          question: "The formula for profit is: Profit = Revenue - __________",
+          correct: 1, // B) Expenses
+          xp: 10,
+        },
+        {
+          question: "Which graph shows increasing profit over time?",
+          correct: 2, // C) Upward line
+          xp: 10,
+        },
+        {
+          question: "Which is the BEST way to save money?",
+          correct: 2, // C) Set aside a portion regularly
+          xp: 10,
+        },
+        {
+          question: "What is the main purpose of a budget?",
+          correct: 1, // B) To plan how to use your money
+          xp: 10,
+        },
+        {
+          question: "Which is an example of a fixed cost?",
+          correct: 1, // B) Monthly rent
+          xp: 10,
+        },
+        {
+          question: "What is revenue?",
+          correct: 2, // C) Money earned from sales
+          xp: 10,
+        },
+        {
+          question: "What does 'break-even' mean?",
+          correct: 2, // C) When revenue equals expenses
+          xp: 10,
+        },
+        {
+          question: "Why do people invest money?",
+          correct: 1, // B) To grow their money over time
+          xp: 10,
+        },
+      ];
+
+      // Quiz state
+      let currentQuestion = 0;
+      let score = 0;
+      let totalXP = 0;
+      let timer;
+      let timeLeft = 165; // 2 minutes 45 seconds
+
+      // Initialize quiz
+      function initQuiz() {
+        // Create progress dots
+        const dotsContainer = document.getElementById("progress-dots");
+        for (let i = 0; i < quizData.length; i++) {
+          const dot = document.createElement("div");
+          dot.className = "progress-dot";
+          if (i === 0) dot.classList.add("active");
+          dotsContainer.appendChild(dot);
+        }
+
+        // Start timer
+        startTimer();
+      }
+
+      // Start timer
+      function startTimer() {
+        timer = setInterval(() => {
+          timeLeft--;
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          document.getElementById("timer").textContent = `${minutes}:${
+            seconds < 10 ? "0" : ""
+          }${seconds}`;
+
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            showResults();
+          }
+        }, 1000);
+      }
+
+      // Select option
+      function selectOption(element, questionNum) {
+        // Remove selected class from all options
+        const options = element.parentElement.querySelectorAll(".option");
+        options.forEach((opt) => opt.classList.remove("selected"));
+
+        // Add selected class to clicked option
+        element.classList.add("selected");
+      }
+
+      // Submit answer
+      function submitAnswer(questionNum) {
+        const question = quizData[questionNum - 1];
+        const selectedOption = document.querySelector(
+          `#question-${questionNum} .option.selected`
+        );
+
+        if (!selectedOption) {
+          alert("Please select an answer!");
+          return;
+        }
+
+        // Check if answer is correct
+        const isCorrect = selectedOption.dataset.correct === "true";
+
+        // Show feedback
+        const feedback = document.getElementById(`feedback-${questionNum}`);
+        if (isCorrect) {
+          selectedOption.classList.add("correct");
+          selectedOption.classList.remove("selected");
+          feedback.className = "feedback correct";
+          feedback.innerHTML = `Correct! <div class="xp-award">+${question.xp} XP</div>`;
+          score++;
+          totalXP += question.xp;
+        } else {
+          selectedOption.classList.add("incorrect");
+          selectedOption.classList.add("shake");
+          setTimeout(() => {
+            selectedOption.classList.remove("shake");
+          }, 500);
+
+          // Find and highlight correct answer
+          const correctOption = document.querySelector(
+            `#question-${questionNum} .option[data-correct="true"]`
+          );
+          correctOption.classList.add("correct");
+
+          feedback.className = "feedback incorrect";
+          feedback.textContent = `Incorrect. The correct answer is: ${
+            correctOption.querySelector(".option-text").textContent
+          }`;
+        }
+
+        // Disable all options and submit button
+        document
+          .querySelectorAll(`#question-${questionNum} .option`)
+          .forEach((opt) => {
+            opt.style.pointerEvents = "none";
+          });
+        document.querySelector(
+          `#question-${questionNum} .submit-btn`
+        ).disabled = true;
+
+        // Move to next question after delay
+        setTimeout(() => {
+          currentQuestion++;
+          if (currentQuestion < quizData.length) {
+            showNextQuestion();
+          } else {
+            clearInterval(timer);
+            showResults();
+          }
+        }, 1500);
+      }
+
+      // Show next question
+      function showNextQuestion() {
+        // Hide current question
+        document
+          .getElementById(`question-${currentQuestion}`)
+          .classList.remove("question-visible");
+        document
+          .getElementById(`question-${currentQuestion}`)
+          .classList.add("question-hidden");
+
+        // Show next question
+        document
+          .getElementById(`question-${currentQuestion + 1}`)
+          .classList.remove("question-hidden");
+        document
+          .getElementById(`question-${currentQuestion + 1}`)
+          .classList.add("question-visible");
+
+        // Update question counter
+        document.getElementById("question-number").textContent =
+          currentQuestion + 1;
+
+        // Update progress dots
+        const dots = document.querySelectorAll(".progress-dot");
+        dots.forEach((dot, index) => {
+          dot.classList.remove("active", "completed");
+          if (index < currentQuestion) {
+            dot.classList.add("completed");
+          } else if (index === currentQuestion) {
+            dot.classList.add("active");
+          }
+        });
+      }
+
+      // Show results
+      function showResults() {
+        // Hide all questions
+        document.querySelectorAll(".question-container").forEach((q) => {
+          q.classList.remove("question-visible");
+          q.classList.add("question-hidden");
+        });
+
+        // Show results
+        document
+          .getElementById("results-screen")
+          .classList.add("results-visible");
+
+        // Update results
+        document.getElementById(
+          "final-score"
+        ).textContent = `You scored: ${score}/${quizData.length}`;
+        document.getElementById(
+          "final-xp"
+        ).textContent = `+${totalXP} XP Earned`;
+
+        // Feedback message based on score
+        const feedback = document.getElementById("final-feedback");
+        if (score === quizData.length) {
+          feedback.textContent = "Perfect score! You're a financial genius!";
+        } else if (score >= quizData.length * 0.8) {
+          feedback.textContent =
+            "Great job! You really understand these concepts.";
+        } else if (score >= quizData.length * 0.6) {
+          feedback.textContent =
+            "Good effort! Review the questions you missed to improve.";
+        } else {
+          feedback.textContent =
+            "Keep practicing! The more you learn, the better you'll do next time.";
+        }
+      }
+
+      // Initialize quiz when page loads
+      window.onload = initQuiz;
+    </script>
+  </body>
+</html>

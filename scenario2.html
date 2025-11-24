@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toy Shop Tycoon - BizVenture Kids</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="homepage.css" />
+    <link rel="stylesheet" href="responsive.css" />
+    <style>
+      :root {
+        --primary: #4caf50;
+        --primary-dark: #388e3c;
+        --secondary: #ffe082;
+        --accent: #ff9800;
+        --text: #2e7d32;
+        --text-light: #666;
+        --background: #f5f5f5;
+        --card-bg: #ffffff;
+        --border: #e0e0e0;
+        --correct: #4caf50;
+        --incorrect: #f44336;
+        --highlight: #81d4fa;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      .simulation-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .simulation-header {
+        background: linear-gradient(135deg, var(--secondary), #a5d6a7);
+        padding: 30px;
+        text-align: center;
+        color: var(--text);
+      }
+
+      .simulation-title {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .simulation-title::before {
+        content: "🧸";
+        margin-right: 10px;
+      }
+
+      .simulation-subtitle {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .simulation-meta {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9em;
+      }
+
+      .meta-icon {
+        margin-right: 5px;
+        color: var(--text);
+      }
+
+      .simulation-content {
+        padding: 30px;
+      }
+
+      .progress-tracker {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .progress-steps {
+        display: flex;
+        gap: 10px;
+      }
+
+      .progress-step {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 0.8em;
+        font-weight: bold;
+      }
+
+      .progress-step.active {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .progress-step.completed {
+        background-color: var(--primary-dark);
+        color: white;
+      }
+
+      .scenario-section {
+        margin-bottom: 40px;
+        display: none;
+      }
+
+      .scenario-section.active {
+        display: block;
+      }
+
+      .scenario-title {
+        color: var(--text);
+        font-size: 1.6em;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--secondary);
+        display: flex;
+        align-items: center;
+      }
+
+      .scenario-icon {
+        margin-right: 10px;
+        color: var(--primary);
+      }
+
+      .scenario-description {
+        background-color: var(--secondary);
+        padding: 20px;
+        color: #666;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid var(--primary);
+        line-height: 1.6;
+      }
+
+      .decision-card {
+        background-color: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .decision-title {
+        color: var(--text);
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .decision-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .option-card {
+        background-color: var(--card-bg);
+        border: 2px solid var(--border);
+        color: #666;
+        border-radius: 8px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .option-card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .option-card.selected {
+        border-color: var(--primary);
+        background-color: rgba(76, 175, 80, 0.1);
+      }
+
+      .option-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 100%;
+        transition: width 0.3s;
+      }
+
+      .option-card.selected::after {
+        width: 10px;
+      }
+
+      .option-title {
+        color: var(--text);
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .option-details {
+        color: var(--text-light);
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+
+      .option-property {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        font-size: 0.85em;
+      }
+
+      .inventory-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #666;
+        margin: 20px 0;
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .inventory-table th,
+      .inventory-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .inventory-table th {
+        background-color: var(--secondary);
+        color: var(--text);
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .inventory-table td:last-child {
+        text-align: center;
+      }
+
+      .inventory-input {
+        width: 60px;
+        padding: 8px;
+        text-align: center;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+
+      .budget-summary {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+        padding: 10px;
+        background-color: rgba(255, 235, 238, 0.5);
+        border-radius: 8px;
+      }
+
+      .budget-item {
+        text-align: center;
+        font-size: 0.9em;
+      }
+
+      .budget-value {
+        font-weight: bold;
+        color: var(--primary);
+      }
+
+      .slider-container {
+        margin: 15px 0;
+      }
+
+      .slider-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+      }
+
+      .price-slider {
+        width: 100%;
+        -webkit-appearance: none;
+        height: 8px;
+        border-radius: 4px;
+        background: #d3d3d3;
+        outline: none;
+      }
+
+      .price-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+      }
+
+      .price-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+      }
+
+      .results-container {
+        background-color: rgba(76, 175, 80, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 30px;
+      }
+
+      .results-title {
+        color: var(--text);
+        font-size: 1.6em;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .results-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .metric-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .metric-value {
+        color: var(--primary);
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .metric-label {
+        color: var(--text-light);
+        font-size: 0.9em;
+      }
+
+      .positive {
+        color: var(--primary);
+      }
+
+      .negative {
+        color: var(--incorrect);
+      }
+
+      .product-performance {
+        margin: 20px 0;
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .performance-header {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .performance-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+
+      .performance-name {
+        text-align: left;
+        font-weight: 500;
+      }
+
+      .performance-metric {
+        font-weight: 500;
+      }
+
+      .educational-note {
+        background-color: var(--secondary);
+        padding: 15px;
+        color: #555;
+        border-radius: 8px;
+        border-left: 4px solid var(--primary);
+        margin: 20px 0;
+        font-size: 0.9em;
+        position: relative;
+      }
+
+      .educational-note::before {
+        content: "💡";
+        position: absolute;
+        left: -5px;
+        top: 10px;
+        font-size: 1.2em;
+      }
+
+      .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+      }
+
+      .nav-button {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1em;
+      }
+
+      .nav-button.prev {
+        background-color: var(--secondary);
+        color: var(--text);
+      }
+
+      .nav-button.next {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .nav-button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .warning {
+        color: var(--incorrect);
+        font-size: 0.9em;
+        margin-top: 5px;
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .simulation-container {
+          margin: 10px;
+          border-radius: 0;
+        }
+
+        .simulation-header {
+          padding: 20px;
+        }
+
+        .simulation-content {
+          padding: 20px;
+        }
+
+        .decision-options {
+          grid-template-columns: 1fr;
+        }
+
+        .inventory-table {
+          font-size: 0.8em;
+        }
+
+        .inventory-table th,
+        .inventory-table td {
+          padding: 8px;
+        }
+
+        .navigation-buttons {
+          flex-direction: column;
+        }
+
+        .nav-button {
+          width: 100%;
+          margin: 5px 0;
+        }
+
+        .performance-header,
+        .performance-row {
+          grid-template-columns: 1fr;
+          text-align: left;
+        }
+
+        .performance-metric {
+          margin-top: 5px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+      ★ Play. Decide. Grow: The Safe Way to Learn Real Money Skills! ★
+    </div>
+
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <!-- Replace with your logo image -->
+        <img src="your-logo.png" alt="" />
+        Al mo7assib A saghir
+      </div>
+      <nav>
+        <ul>
+          <li><a href="homepage.html">Home</a></li>
+          <li><a href="aboutUs.html">About Us</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="simulation-container">
+      <div class="simulation-header">
+        <h1 class="simulation-title">Toy Shop Tycoon</h1>
+        <p class="simulation-subtitle">
+          Run your own toy shop for a month! Make smart decisions to maximize
+          your profits and learn about retail management.
+        </p>
+        <div class="simulation-meta">
+          <div class="meta-item">
+            <i class="fas fa-chart-line meta-icon"></i>
+            <span>Intermediate</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-users meta-icon"></i>
+            <span>Ages 10-14</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-clock meta-icon"></i>
+            <span>15-20 min</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-dollar-sign meta-icon"></i>
+            <span>$200 Start</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-trophy meta-icon"></i>
+            <span>100 XP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="simulation-content">
+        <div class="progress-tracker">
+          <div>
+            <span style="color: var(--text); font-weight: bold"
+              >Simulation Progress:</span
+            >
+            <span style="margin-left: 10px" id="progress-text"
+              >0% Complete</span
+            >
+          </div>
+          <div class="progress-steps">
+            <div class="progress-step active">1</div>
+            <div class="progress-step">2</div>
+            <div class="progress-step">3</div>
+            <div class="progress-step">4</div>
+            <div class="progress-step">5</div>
+          </div>
+        </div>
+
+        <!-- SCENE 1: LOCATION -->
+        <div class="scenario-section active" id="scene-1">
+          <h2 class="scenario-title">
+            <i class="fas fa-map-marked-alt scenario-icon"></i>
+            Choose Your Location
+          </h2>
+
+          <div class="scenario-description">
+            <p>
+              You're opening a toy shop for one month! Your first decision is
+              where to locate your shop.
+            </p>
+            <p>
+              Each location has different costs and attracts different types of
+              customers. Consider your budget and target market when making your
+              choice.
+            </p>
+          </div>
+
+          <div class="educational-note">
+            <strong>Key Concept:</strong> This is a FIXED COST - you pay the
+            rent no matter how much you sell! Choose a location that matches
+            your budget and business goals.
+          </div>
+
+          <div class="decision-card">
+            <div class="decision-title">
+              1. Where will you rent space for your shop?
+            </div>
+            <div class="decision-options">
+              <div class="option-card" onclick="selectOption(this, 1, 1)">
+                <div class="option-title">Local Park Booth</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$20/month</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Traffic:</strong></span>
+                  <span>High on weekends</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Space:</strong></span>
+                  <span>Small (max 50 toys)</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Customers:</strong></span>
+                  <span>Families with young kids</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Risk:</strong></span>
+                  <span>Weather-dependent</span>
+                </div>
+              </div>
+
+              <div class="option-card" onclick="selectOption(this, 1, 2)">
+                <div class="option-title">Small Strip Mall</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$60/month</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Traffic:</strong></span>
+                  <span>Steady daily traffic</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Space:</strong></span>
+                  <span>Medium (max 100 toys)</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Customers:</strong></span>
+                  <span>Mixed age groups</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Benefit:</strong></span>
+                  <span>Indoor protection</span>
+                </div>
+              </div>
+
+              <div class="option-card" onclick="selectOption(this, 1, 3)">
+                <div class="option-title">Busy Shopping Mall</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$120/month</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Traffic:</strong></span>
+                  <span>Very high</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Space:</strong></span>
+                  <span>Large (max 200 toys)</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Customers:</strong></span>
+                  <span>Serious shoppers</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Benefit:</strong></span>
+                  <span>Premium visibility</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCENE 2: INVENTORY -->
+        <div class="scenario-section" id="scene-2">
+          <h2 class="scenario-title">
+            <i class="fas fa-boxes scenario-icon"></i>
+            Select Toy Inventory
+          </h2>
+
+          <div class="scenario-description">
+            <p>
+              Now choose which toys to stock in your shop. Each type of toy has
+              different costs, appeal, and profit potential.
+            </p>
+            <p>
+              You have $200 to spend on inventory, and your space is limited by
+              your location choice. Think about which toys will appeal to your
+              customers!
+            </p>
+          </div>
+
+          <div class="educational-note">
+            <strong>Key Concept:</strong> Different products have different
+            sales speeds and profit margins. A good mix can help balance your
+            risk!
+          </div>
+
+          <div class="decision-card">
+            <div class="decision-title">2. Choose your toy inventory mix:</div>
+
+            <table class="inventory-table">
+              <thead>
+                <tr>
+                  <th>Toy Type</th>
+                  <th>Cost Each</th>
+                  <th>Suggested Retail</th>
+                  <th>Appeal</th>
+                  <th>Sell Speed</th>
+                  <th>Profit Margin</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rubber Balls</td>
+                  <td>$1.00</td>
+                  <td>$4.00</td>
+                  <td>Very young kids (3-6)</td>
+                  <td>Very fast</td>
+                  <td>Low but reliable</td>
+                  <td>
+                    <input
+                      type="number"
+                      class="inventory-input"
+                      id="balls-quantity"
+                      min="0"
+                      max="200"
+                      value="0"
+                      onchange="updateInventory()"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Plush Animals</td>
+                  <td>$5.00</td>
+                  <td>$18.00</td>
+                  <td>Kids ages 5-10</td>
+                  <td>Fast</td>
+                  <td>Medium</td>
+                  <td>
+                    <input
+                      type="number"
+                      class="inventory-input"
+                      id="plush-quantity"
+                      min="0"
+                      max="100"
+                      value="0"
+                      onchange="updateInventory()"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Board Games</td>
+                  <td>$12.00</td>
+                  <td>$35.00</td>
+                  <td>Kids ages 8-14</td>
+                  <td>Medium</td>
+                  <td>High</td>
+                  <td>
+                    <input
+                      type="number"
+                      class="inventory-input"
+                      id="games-quantity"
+                      min="0"
+                      max="50"
+                      value="0"
+                      onchange="updateInventory()"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>RC Cars</td>
+                  <td>$25.00</td>
+                  <td>$75.00</td>
+                  <td>Kids ages 10-15</td>
+                  <td>Slow</td>
+                  <td>Very high but risky</td>
+                  <td>
+                    <input
+                      type="number"
+                      class="inventory-input"
+                      id="rc-quantity"
+                      min="0"
+                      max="20"
+                      value="0"
+                      onchange="updateInventory()"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="budget-summary">
+              <div class="budget-item">
+                <span>Total Cost:</span>
+                <div class="budget-value" id="inventory-cost">$0</div>
+              </div>
+              <div class="budget-item">
+                <span>Remaining Budget:</span>
+                <div class="budget-value" id="remaining-budget">$200</div>
+              </div>
+              <div class="budget-item">
+                <span>Items Purchased:</span>
+                <div class="budget-value" id="total-items">0</div>
+              </div>
+              <div class="budget-item">
+                <span>Space Used:</span>
+                <div class="budget-value" id="space-used">
+                  0/<span id="max-space">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="warning" id="budget-warning">
+              You've exceeded your $200 budget!
+            </div>
+            <div class="warning" id="space-warning">
+              You've exceeded your space limit!
+            </div>
+          </div>
+        </div>
+
+        <!-- SCENE 3: LABOR -->
+        <div class="scenario-section" id="scene-3">
+          <h2 class="scenario-title">
+            <i class="fas fa-users-cog scenario-icon"></i>
+            Hire Help?
+          </h2>
+
+          <div class="scenario-description">
+            <p>
+              Decide whether to hire help for your toy shop. More staff means
+              you can serve more customers, but it also increases your costs.
+            </p>
+            <p>
+              Think about how many customers you expect and whether the
+              increased sales will justify the labor costs.
+            </p>
+          </div>
+
+          <div class="educational-note">
+            <strong>Key Concept:</strong> Labor costs increase your capacity but
+            reduce your profit. Calculate whether the increased sales will be
+            worth the cost!
+          </div>
+
+          <div class="decision-card">
+            <div class="decision-title">3. Will you hire an assistant?</div>
+            <div class="decision-options">
+              <div class="option-card" onclick="selectOption(this, 3, 1)">
+                <div class="option-title">Work Alone</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$0.00/month</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Capacity:</strong></span>
+                  <span>3-5 customers/hour</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Pros:</strong></span>
+                  <span>No labor costs</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Cons:</strong></span>
+                  <span>Limited sales capacity</span>
+                </div>
+              </div>
+
+              <div class="option-card" onclick="selectOption(this, 3, 2)">
+                <div class="option-title">Part-Time Helper</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$40.00/month</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Capacity:</strong></span>
+                  <span>8-10 customers/hour</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Pros:</strong></span>
+                  <span>Better customer service</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Pros:</strong></span>
+                  <span>Can restock while selling</span>
+                </div>
+              </div>
+
+              <div class="option-card" onclick="selectOption(this, 3, 3)">
+                <div class="option-title">Full-Time Assistant</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$80.00/month</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Capacity:</strong></span>
+                  <span>12-15 customers/hour</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Pros:</strong></span>
+                  <span>Excellent service</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Pros:</strong></span>
+                  <span>Can handle rushes</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Pros:</strong></span>
+                  <span>Focus on harder sells</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCENE 4: PRICING -->
+        <div class="scenario-section" id="scene-4">
+          <h2 class="scenario-title">
+            <i class="fas fa-tags scenario-icon"></i>
+            Pricing Strategy
+          </h2>
+
+          <div class="scenario-description">
+            <p>
+              Set your prices for each toy category. Different products have
+              different price sensitivities.
+            </p>
+            <p>
+              Consider your target customers, competition, and the quality of
+              your products when setting prices.
+            </p>
+          </div>
+
+          <div class="educational-note">
+            <strong>Key Concept:</strong> Price sensitivity varies by product
+            type. Premium items can handle higher prices, while basic items are
+            more price-sensitive.
+          </div>
+
+          <div class="decision-card">
+            <div class="decision-title">
+              4. Set your prices for each toy category:
+            </div>
+
+            <div class="slider-container">
+              <div class="slider-label">
+                <span>Rubber Balls (Cost: $1.00, Suggested: $4.00)</span>
+                <span>$<span id="balls-price">4.00</span></span>
+              </div>
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value="4"
+                class="price-slider"
+                id="balls-slider"
+                oninput="updatePrice('balls')"
+              />
+
+              <div class="slider-label">
+                <span>Plush Animals (Cost: $5.00, Suggested: $18.00)</span>
+                <span>$<span id="plush-price">18.00</span></span>
+              </div>
+              <input
+                type="range"
+                min="10"
+                max="30"
+                value="18"
+                class="price-slider"
+                id="plush-slider"
+                oninput="updatePrice('plush')"
+              />
+
+              <div class="slider-label">
+                <span>Board Games (Cost: $12.00, Suggested: $35.00)</span>
+                <span>$<span id="games-price">35.00</span></span>
+              </div>
+              <input
+                type="range"
+                min="20"
+                max="50"
+                value="35"
+                class="price-slider"
+                id="games-slider"
+                oninput="updatePrice('games')"
+              />
+
+              <div class="slider-label">
+                <span>RC Cars (Cost: $25.00, Suggested: $75.00)</span>
+                <span>$<span id="rc-price">75.00</span></span>
+              </div>
+              <input
+                type="range"
+                min="40"
+                max="100"
+                value="75"
+                class="price-slider"
+                id="rc-slider"
+                oninput="updatePrice('rc')"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- SCENE 5: MARKETING -->
+        <div class="scenario-section" id="scene-5">
+          <h2 class="scenario-title">
+            <i class="fas fa-bullhorn scenario-icon"></i>
+            Marketing & Promotion
+          </h2>
+
+          <div class="scenario-description">
+            <p>
+              Choose your marketing approach to attract customers to your toy
+              shop.
+            </p>
+            <p>
+              Different marketing strategies have different costs and
+              effectiveness. Consider your budget and target customers.
+            </p>
+          </div>
+
+          <div class="decision-card">
+            <div class="decision-title">5. Choose your marketing approach:</div>
+            <div class="decision-options">
+              <div class="option-card" onclick="selectOption(this, 5, 1)">
+                <div class="option-title">Window Display Only</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$0.00</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Effect:</strong></span>
+                  <span>Attracts walk-by customers only</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Best for:</strong></span>
+                  <span>Low-cost approach</span>
+                </div>
+              </div>
+
+              <div class="option-card" onclick="selectOption(this, 5, 2)">
+                <div class="option-title">Flyers & Coupons</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$25.00</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Effect:</strong></span>
+                  <span>10% off coupon attracts budget shoppers</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Best for:</strong></span>
+                  <span>Volume sales</span>
+                </div>
+              </div>
+
+              <div class="option-card" onclick="selectOption(this, 5, 3)">
+                <div class="option-title">Themed Event</div>
+                <div class="option-property">
+                  <span><strong>Cost:</strong></span>
+                  <span>$50.00</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Effect:</strong></span>
+                  <span>Toy Demo Day - big attraction</span>
+                </div>
+                <div class="option-property">
+                  <span><strong>Best for:</strong></span>
+                  <span>Expensive items, serious buyers</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCENE 6: RESULTS -->
+        <div class="scenario-section" id="scene-6">
+          <h2 class="scenario-title">
+            <i class="fas fa-chart-line scenario-icon"></i>
+            Business Results
+          </h2>
+
+          <div class="results-container">
+            <div class="results-title">Your Toy Shop Performance</div>
+
+            <div class="results-metrics">
+              <div class="metric-card">
+                <div class="metric-value" id="revenue-value">$0</div>
+                <div class="metric-label">Total Revenue</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value" id="profit-value">$0</div>
+                <div class="metric-label">Net Profit</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value" id="customers-value">0</div>
+                <div class="metric-label">Customers Served</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value" id="rating-value">0/5</div>
+                <div class="metric-label">Customer Rating</div>
+              </div>
+            </div>
+
+            <div class="product-performance">
+              <h3
+                style="
+                  color: var(--text);
+                  margin-bottom: 10px;
+                  text-align: center;
+                "
+              >
+                Product Performance
+              </h3>
+              <div class="performance-header">
+                <div class="performance-name">Product</div>
+                <div class="performance-metric">Sold</div>
+                <div class="performance-metric">Revenue</div>
+                <div class="performance-metric">Profit</div>
+              </div>
+              <div class="performance-row">
+                <div class="performance-name">Rubber Balls</div>
+                <div class="performance-metric" id="balls-sold">0</div>
+                <div class="performance-metric" id="balls-revenue">$0</div>
+                <div class="performance-metric" id="balls-profit">$0</div>
+              </div>
+              <div class="performance-row">
+                <div class="performance-name">Plush Animals</div>
+                <div class="performance-metric" id="plush-sold">0</div>
+                <div class="performance-metric" id="plush-revenue">$0</div>
+                <div class="performance-metric" id="plush-profit">$0</div>
+              </div>
+              <div class="performance-row">
+                <div class="performance-name">Board Games</div>
+                <div class="performance-metric" id="games-sold">0</div>
+                <div class="performance-metric" id="games-revenue">$0</div>
+                <div class="performance-metric" id="games-profit">$0</div>
+              </div>
+              <div class="performance-row">
+                <div class="performance-name">RC Cars</div>
+                <div class="performance-metric" id="rc-sold">0</div>
+                <div class="performance-metric" id="rc-revenue">$0</div>
+                <div class="performance-metric" id="rc-profit">$0</div>
+              </div>
+            </div>
+
+            <div
+              style="
+                background-color: var(--secondary);
+                padding: 15px;
+                border-radius: 8px;
+                border-left: 4px solid var(--primary);
+                margin-top: 20px;
+              "
+            >
+              <h3 style="color: var(--text); margin-bottom: 10px">
+                Key Lessons Learned
+              </h3>
+              <div
+                id="lessons-text"
+                style="line-height: 1.6; color: var(--text-light)"
+              >
+                <!-- LESSONS WILL BE GENERATED BY JAVASCRIPT -->
+              </div>
+            </div>
+
+            <div
+              style="
+                background-color: var(--card-bg);
+                padding: 15px;
+                border-radius: 8px;
+                margin-top: 20px;
+                text-align: center;
+              "
+            >
+              <h3 style="color: var(--text); margin-bottom: 10px">
+                Your Score
+              </h3>
+              <div
+                style="font-size: 2em; font-weight: bold; color: var(--primary)"
+                id="score-value"
+              >
+                0/100
+              </div>
+              <div style="margin-top: 10px">
+                <button
+                  class="nav-button"
+                  style="
+                    background-color: var(--primary);
+                    color: white;
+                    margin: 0 10px;
+                  "
+                  onclick="window.location.href='dashboard.html'"
+                >
+                  Return to Dashboard
+                </button>
+                <button
+                  class="nav-button"
+                  style="
+                    background-color: var(--secondary);
+                    color: var(--text);
+                    margin: 0 10px;
+                  "
+                  onclick="restartSimulation()"
+                >
+                  Try Again
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="navigation-buttons">
+          <button class="nav-button prev" onclick="prevScene()" disabled>
+            ← Previous
+          </button>
+          <button class="nav-button next" onclick="nextScene()">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="your-logo.png" alt="BizVenture Kids Logo" />
+        </div>
+        <nav class="footer-nav">
+          <ul>
+           <li><a href="homepage.html">Home</a></li>
+          <li><a href="aboutUs.html">About Us</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-links">
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms and Conditions</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <div class="contact-info">
+          <p>📞 +47 961 78 807</p>
+          <p>✉️ Info@BizVentureKids.no</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2025 BizVenture Kids. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Simulation state
+      let currentScene = 1;
+      let totalScenes = 6;
+      let locationChoice = null;
+      let maxSpace = 0;
+      let inventory = {
+        balls: {
+          quantity: 0,
+          cost: 1,
+          price: 4,
+          sold: 0,
+          revenue: 0,
+          profit: 0,
+        },
+        plush: {
+          quantity: 0,
+          cost: 5,
+          price: 18,
+          sold: 0,
+          revenue: 0,
+          profit: 0,
+        },
+        games: {
+          quantity: 0,
+          cost: 12,
+          price: 35,
+          sold: 0,
+          revenue: 0,
+          profit: 0,
+        },
+        rc: {
+          quantity: 0,
+          cost: 25,
+          price: 75,
+          sold: 0,
+          revenue: 0,
+          profit: 0,
+        },
+      };
+      let laborChoice = null;
+      let marketingChoice = null;
+      let score = 0;
+
+      // Initialize simulation
+      function initSimulation() {
+        updateProgress();
+        document.getElementById("max-space").textContent = maxSpace;
+      }
+
+      // Update progress tracker
+      function updateProgress() {
+        const progress = Math.round(
+          ((currentScene - 1) / (totalScenes - 1)) * 100
+        );
+        document.getElementById(
+          "progress-text"
+        ).textContent = `${progress}% Complete`;
+
+        const steps = document.querySelectorAll(".progress-step");
+        steps.forEach((step, index) => {
+          step.classList.remove("active", "completed");
+          if (index < currentScene - 1) {
+            step.classList.add("completed");
+          } else if (index === currentScene - 1) {
+            step.classList.add("active");
+          }
+        });
+
+        // Update navigation buttons
+        const prevButton = document.querySelector(".nav-button.prev");
+        const nextButton = document.querySelector(".nav-button.next");
+
+        prevButton.disabled = currentScene === 1;
+        nextButton.textContent =
+          currentScene === totalScenes ? "Finish Simulation" : "Next →";
+      }
+
+      // Update inventory calculations
+      function updateInventory() {
+        // Get quantities from inputs
+        inventory.balls.quantity =
+          parseInt(document.getElementById("balls-quantity").value) || 0;
+        inventory.plush.quantity =
+          parseInt(document.getElementById("plush-quantity").value) || 0;
+        inventory.games.quantity =
+          parseInt(document.getElementById("games-quantity").value) || 0;
+        inventory.rc.quantity =
+          parseInt(document.getElementById("rc-quantity").value) || 0;
+
+        // Calculate total cost and items
+        let totalCost =
+          inventory.balls.quantity * inventory.balls.cost +
+          inventory.plush.quantity * inventory.plush.cost +
+          inventory.games.quantity * inventory.games.cost +
+          inventory.rc.quantity * inventory.rc.cost;
+
+        let totalItems =
+          inventory.balls.quantity +
+          inventory.plush.quantity +
+          inventory.games.quantity +
+          inventory.rc.quantity;
+
+        // Update display
+        document.getElementById("inventory-cost").textContent = `$${totalCost}`;
+        document.getElementById("remaining-budget").textContent = `$${
+          200 - totalCost
+        }`;
+        document.getElementById("total-items").textContent = totalItems;
+        document.getElementById(
+          "space-used"
+        ).textContent = `${totalItems}/${maxSpace}`;
+
+        // Show/hide warnings
+        document.getElementById("budget-warning").style.display =
+          totalCost > 200 ? "block" : "none";
+        document.getElementById("space-warning").style.display =
+          totalItems > maxSpace ? "block" : "none";
+
+        // Update progress bar
+        const progress = Math.min(100, (totalCost / 200) * 100);
+        document.getElementById("budget-progress").style.width = `${progress}%`;
+
+        // Change color if over budget or space
+        if (totalCost > 200 || totalItems > maxSpace) {
+          document.getElementById("budget-progress").style.backgroundColor =
+            "var(--incorrect)";
+        } else {
+          document.getElementById("budget-progress").style.backgroundColor =
+            "var(--primary)";
+        }
+
+        // Enable/disable next button based on valid inventory
+        const nextButton = document.querySelector(".nav-button.next");
+        if (currentScene === 2) {
+          nextButton.disabled =
+            totalCost > 200 || totalItems === 0 || totalItems > maxSpace;
+        }
+      }
+
+      // Update price sliders
+      function updatePrice(product) {
+        let price = 0;
+
+        switch (product) {
+          case "balls":
+            price = parseInt(document.getElementById("balls-slider").value);
+            document.getElementById("balls-price").textContent = price;
+            inventory.balls.price = price;
+            break;
+          case "plush":
+            price = parseInt(document.getElementById("plush-slider").value);
+            document.getElementById("plush-price").textContent = price;
+            inventory.plush.price = price;
+            break;
+          case "games":
+            price = parseInt(document.getElementById("games-slider").value);
+            document.getElementById("games-price").textContent = price;
+            inventory.games.price = price;
+            break;
+          case "rc":
+            price = parseInt(document.getElementById("rc-slider").value);
+            document.getElementById("rc-price").textContent = price;
+            inventory.rc.price = price;
+            break;
+        }
+      }
+
+      // Select option
+      function selectOption(element, sceneNum, optionNum) {
+        // Remove selected class from all options in this scene
+        const scene = document.getElementById(`scene-${sceneNum}`);
+        const options = scene.querySelectorAll(".option-card");
+        options.forEach((opt) => opt.classList.remove("selected"));
+
+        // Add selected class to clicked option
+        element.classList.add("selected");
+
+        // Store selection
+        switch (sceneNum) {
+          case 1: // Location
+            locationChoice = optionNum;
+            switch (optionNum) {
+              case 1:
+                maxSpace = 50;
+                break;
+              case 2:
+                maxSpace = 100;
+                break;
+              case 3:
+                maxSpace = 200;
+                break;
+            }
+            document.getElementById("max-space").textContent = maxSpace;
+            updateInventory(); // Update space display
+            break;
+          case 3: // Labor
+            laborChoice = optionNum;
+            break;
+          case 5: // Marketing
+            marketingChoice = optionNum;
+            break;
+        }
+
+        // Enable next button
+        document.querySelector(".nav-button.next").disabled = false;
+      }
+
+      // Navigation functions
+      function prevScene() {
+        if (currentScene > 1) {
+          document
+            .getElementById(`scene-${currentScene}`)
+            .classList.remove("active");
+          currentScene--;
+          document
+            .getElementById(`scene-${currentScene}`)
+            .classList.add("active");
+          updateProgress();
+        }
+      }
+
+      function nextScene() {
+        if (currentScene < totalScenes) {
+          // Validate current scene before proceeding
+          let canProceed = true;
+
+          if (currentScene === 1 && !locationChoice) {
+            alert("Please select a location before continuing.");
+            canProceed = false;
+          } else if (currentScene === 2) {
+            const totalCost =
+              inventory.balls.quantity * inventory.balls.cost +
+              inventory.plush.quantity * inventory.plush.cost +
+              inventory.games.quantity * inventory.games.cost +
+              inventory.rc.quantity * inventory.rc.cost;
+
+            const totalItems =
+              inventory.balls.quantity +
+              inventory.plush.quantity +
+              inventory.games.quantity +
+              inventory.rc.quantity;
+
+            if (totalCost > 200) {
+              alert("You cannot exceed your $200 budget!");
+              canProceed = false;
+            } else if (totalItems === 0) {
+              alert("You must purchase at least some inventory!");
+              canProceed = false;
+            } else if (totalItems > maxSpace) {
+              alert(`You cannot exceed your space limit of ${maxSpace} items!`);
+              canProceed = false;
+            }
+          } else if (currentScene === 3 && !laborChoice) {
+            alert("Please select a labor option before continuing.");
+            canProceed = false;
+          } else if (currentScene === 5 && !marketingChoice) {
+            alert("Please select a marketing approach before continuing.");
+            canProceed = false;
+          }
+
+          if (canProceed) {
+            document
+              .getElementById(`scene-${currentScene}`)
+              .classList.remove("active");
+            currentScene++;
+            document
+              .getElementById(`scene-${currentScene}`)
+              .classList.add("active");
+            updateProgress();
+
+            // If we've reached the results scene, calculate and display results
+            if (currentScene === totalScenes) {
+              calculateResults();
+            }
+          }
+        } else {
+          // Simulation complete
+          alert("Simulation complete! Your score has been recorded.");
+        }
+      }
+
+      // Calculate and display results
+      function calculateResults() {
+        // Calculate fixed costs
+        let locationCost = 0;
+        switch (locationChoice) {
+          case 1:
+            locationCost = 20;
+            break;
+          case 2:
+            locationCost = 60;
+            break;
+          case 3:
+            locationCost = 120;
+            break;
+        }
+
+        let laborCost = 0;
+        switch (laborChoice) {
+          case 1:
+            laborCost = 0;
+            break;
+          case 2:
+            laborCost = 40;
+            break;
+          case 3:
+            laborCost = 80;
+            break;
+        }
+
+        let marketingCost = 0;
+        switch (marketingChoice) {
+          case 1:
+            marketingCost = 0;
+            break;
+          case 2:
+            marketingCost = 25;
+            break;
+          case 3:
+            marketingCost = 50;
+            break;
+        }
+
+        const fixedCosts = locationCost + laborCost + marketingCost;
+
+        // Calculate variable costs (inventory)
+        const variableCosts =
+          inventory.balls.quantity * inventory.balls.cost +
+          inventory.plush.quantity * inventory.plush.cost +
+          inventory.games.quantity * inventory.games.cost +
+          inventory.rc.quantity * inventory.rc.cost;
+
+        const totalCosts = fixedCosts + variableCosts;
+
+        // Calculate base customer pool based on location and marketing
+        let baseCustomers = 0;
+        switch (locationChoice) {
+          case 1:
+            baseCustomers = 200;
+            break; // Park
+          case 2:
+            baseCustomers = 400;
+            break; // Strip mall
+          case 3:
+            baseCustomers = 800;
+            break; // Shopping mall
+        }
+
+        // Adjust for marketing
+        switch (marketingChoice) {
+          case 1:
+            baseCustomers = baseCustomers;
+            break; // No boost
+          case 2:
+            baseCustomers = Math.round(baseCustomers * 1.3);
+            break; // Flyers boost
+          case 3:
+            baseCustomers = Math.round(baseCustomers * 1.6);
+            break; // Event boost
+        }
+
+        // Calculate customer capacity based on labor
+        let hourlyCapacity = 0;
+        switch (laborChoice) {
+          case 1:
+            hourlyCapacity = 4;
+            break; // Alone
+          case 2:
+            hourlyCapacity = 9;
+            break; // Part-time
+          case 3:
+            hourlyCapacity = 13;
+            break; // Full-time
+        }
+
+        // Assume 8 hours open per day, 30 days in month
+        const totalCapacity = hourlyCapacity * 8 * 30;
+        const actualCustomers = Math.min(baseCustomers, totalCapacity);
+
+        // Product appeal factors (0-1)
+        const productAppeal = {
+          balls: locationChoice === 1 ? 0.9 : 0.7, // Better for park (young kids)
+          plush: 0.85, // Good for all locations
+          games: locationChoice === 3 ? 0.8 : 0.6, // Better for mall (older kids)
+          rc: locationChoice === 3 ? 0.7 : 0.5, // Best for mall (serious buyers)
+        };
+
+        // Price sensitivity factors (0-1, higher is less sensitive)
+        const priceSensitivity = {
+          balls: 0.3, // Very price sensitive
+          plush: 0.6, // Moderately sensitive
+          games: 0.8, // Less sensitive
+          rc: 0.9, // Least sensitive
+        };
+
+        // Calculate sales for each product
+        let revenue = 0;
+        let itemsSold = 0;
+
+        // Calculate price attractiveness for each product
+        const ballsPriceAttractiveness =
+          1 - 0.3 * ((inventory.balls.price - 4) / 6);
+        const plushPriceAttractiveness =
+          1 - 0.2 * ((inventory.plush.price - 18) / 12);
+        const gamesPriceAttractiveness =
+          1 - 0.1 * ((inventory.games.price - 35) / 15);
+        const rcPriceAttractiveness =
+          1 - 0.05 * ((inventory.rc.price - 75) / 25);
+
+        // Rubber Balls
+        const ballsSalesProb = Math.min(
+          1,
+          Math.max(0, productAppeal.balls * ballsPriceAttractiveness)
+        );
+        const ballsPotentialSales = Math.round(
+          actualCustomers * 0.3 * ballsSalesProb
+        );
+        inventory.balls.sold = Math.min(
+          ballsPotentialSales,
+          inventory.balls.quantity
+        );
+        inventory.balls.revenue = inventory.balls.sold * inventory.balls.price;
+        inventory.balls.profit =
+          inventory.balls.revenue - inventory.balls.sold * inventory.balls.cost;
+        revenue += inventory.balls.revenue;
+        itemsSold += inventory.balls.sold;
+
+        // Plush Animals
+        const plushSalesProb = Math.min(
+          1,
+          Math.max(0, productAppeal.plush * plushPriceAttractiveness)
+        );
+        const plushPotentialSales = Math.round(
+          actualCustomers * 0.4 * plushSalesProb
+        );
+        inventory.plush.sold = Math.min(
+          plushPotentialSales,
+          inventory.plush.quantity
+        );
+        inventory.plush.revenue = inventory.plush.sold * inventory.plush.price;
+        inventory.plush.profit =
+          inventory.plush.revenue - inventory.plush.sold * inventory.plush.cost;
+        revenue += inventory.plush.revenue;
+        itemsSold += inventory.plush.sold;
+
+        // Board Games
+        const gamesSalesProb = Math.min(
+          1,
+          Math.max(0, productAppeal.games * gamesPriceAttractiveness)
+        );
+        const gamesPotentialSales = Math.round(
+          actualCustomers * 0.2 * gamesSalesProb
+        );
+        inventory.games.sold = Math.min(
+          gamesPotentialSales,
+          inventory.games.quantity
+        );
+        inventory.games.revenue = inventory.games.sold * inventory.games.price;
+        inventory.games.profit =
+          inventory.games.revenue - inventory.games.sold * inventory.games.cost;
+        revenue += inventory.games.revenue;
+        itemsSold += inventory.games.sold;
+
+        // RC Cars
+        const rcSalesProb = Math.min(
+          1,
+          Math.max(0, productAppeal.rc * rcPriceAttractiveness)
+        );
+        const rcPotentialSales = Math.round(
+          actualCustomers * 0.1 * rcSalesProb
+        );
+        inventory.rc.sold = Math.min(rcPotentialSales, inventory.rc.quantity);
+        inventory.rc.revenue = inventory.rc.sold * inventory.rc.price;
+        inventory.rc.profit =
+          inventory.rc.revenue - inventory.rc.sold * inventory.rc.cost;
+        revenue += inventory.rc.revenue;
+        itemsSold += inventory.rc.sold;
+
+        // Calculate profit
+        const profit = revenue - totalCosts;
+
+        // Calculate customer rating (1-5)
+        let rating = 3; // Base rating
+
+        // Adjust for location match with products
+        if (locationChoice === 1 && inventory.balls.quantity > 0) {
+          rating += 0.5; // Park matches well with rubber balls
+        }
+
+        // Adjust for price reasonableness
+        if (inventory.balls.price <= 5) rating += 0.2;
+        if (inventory.plush.price <= 20) rating += 0.2;
+        if (inventory.games.price <= 40) rating += 0.2;
+        if (inventory.rc.price <= 85) rating += 0.2;
+
+        // Adjust for labor (better service with more help)
+        if (laborChoice === 2) rating += 0.3;
+        if (laborChoice === 3) rating += 0.5;
+
+        // Adjust for marketing effectiveness
+        if (marketingChoice > 1) rating += 0.2;
+
+        // Cap rating at 5
+        rating = Math.min(5, Math.max(1, Math.round(rating * 10) / 10));
+
+        // Calculate score (0-100)
+        score = 0;
+
+        // Profit contributes up to 50 points
+        score += Math.min(50, profit);
+
+        // Inventory efficiency (up to 20 points)
+        const inventoryEfficiency =
+          itemsSold /
+          (inventory.balls.quantity +
+            inventory.plush.quantity +
+            inventory.games.quantity +
+            inventory.rc.quantity);
+        score += Math.min(20, inventoryEfficiency * 20);
+
+        // Customer rating (up to 15 points)
+        score += Math.min(15, rating * 3);
+
+        // Cost management (up to 15 points)
+        const costRatio = totalCosts > 0 ? revenue / totalCosts : 0;
+        score += Math.min(15, (costRatio - 1) * 10);
+
+        score = Math.min(100, Math.max(0, Math.round(score)));
+
+        // Update results display
+        document.getElementById("revenue-value").textContent = `$${Math.round(
+          revenue
+        )}`;
+        document.getElementById("profit-value").textContent = `$${Math.round(
+          profit
+        )}`;
+        document.getElementById("profit-value").className =
+          profit >= 0 ? "metric-value positive" : "metric-value negative";
+        document.getElementById("customers-value").textContent =
+          actualCustomers;
+        document.getElementById("rating-value").textContent = `${rating}/5`;
+        document.getElementById("score-value").textContent = `${score}/100`;
+
+        // Product performance details
+        document.getElementById("balls-sold").textContent =
+          inventory.balls.sold;
+        document.getElementById("balls-revenue").textContent = `$${Math.round(
+          inventory.balls.revenue
+        )}`;
+        document.getElementById("balls-profit").textContent = `$${Math.round(
+          inventory.balls.profit
+        )}`;
+        document.getElementById("balls-profit").className =
+          inventory.balls.profit >= 0
+            ? "performance-metric positive"
+            : "performance-metric negative";
+
+        document.getElementById("plush-sold").textContent =
+          inventory.plush.sold;
+        document.getElementById("plush-revenue").textContent = `$${Math.round(
+          inventory.plush.revenue
+        )}`;
+        document.getElementById("plush-profit").textContent = `$${Math.round(
+          inventory.plush.profit
+        )}`;
+        document.getElementById("plush-profit").className =
+          inventory.plush.profit >= 0
+            ? "performance-metric positive"
+            : "performance-metric negative";
+
+        document.getElementById("games-sold").textContent =
+          inventory.games.sold;
+        document.getElementById("games-revenue").textContent = `$${Math.round(
+          inventory.games.revenue
+        )}`;
+        document.getElementById("games-profit").textContent = `$${Math.round(
+          inventory.games.profit
+        )}`;
+        document.getElementById("games-profit").className =
+          inventory.games.profit >= 0
+            ? "performance-metric positive"
+            : "performance-metric negative";
+
+        document.getElementById("rc-sold").textContent = inventory.rc.sold;
+        document.getElementById("rc-revenue").textContent = `$${Math.round(
+          inventory.rc.revenue
+        )}`;
+        document.getElementById("rc-profit").textContent = `$${Math.round(
+          inventory.rc.profit
+        )}`;
+        document.getElementById("rc-profit").className =
+          inventory.rc.profit >= 0
+            ? "performance-metric positive"
+            : "performance-metric negative";
+
+        // Generate lessons text
+        let lessons = '<ul style="padding-left: 20px; margin-bottom: 10px;">';
+
+        // Location lessons
+        switch (locationChoice) {
+          case 1:
+            lessons += `<li><strong>Location:</strong> Park booths are great for low-cost startups but depend on good weather and weekends. Your young customer base worked well with rubber balls.</li>`;
+            break;
+          case 2:
+            lessons += `<li><strong>Location:</strong> Strip malls offer steady traffic at moderate cost. This balanced approach worked well for your mixed inventory.</li>`;
+            break;
+          case 3:
+            lessons += `<li><strong>Location:</strong> Mall locations have high traffic but also high costs. Your premium products helped justify this expense.</li>`;
+            break;
+        }
+
+        // Inventory lessons
+        const totalInventory =
+          inventory.balls.quantity +
+          inventory.plush.quantity +
+          inventory.games.quantity +
+          inventory.rc.quantity;
+        const sellThrough = totalInventory > 0 ? itemsSold / totalInventory : 0;
+
+        if (sellThrough < 0.4) {
+          lessons += `<li><strong>Inventory:</strong> You had too much unsold inventory (only ${Math.round(
+            sellThrough * 100
+          )}% sold). Try balancing your product mix better or buying less of slow-moving items.</li>`;
+        } else if (sellThrough > 0.9) {
+          lessons += `<li><strong>Inventory:</strong> You sold almost everything! Next time consider buying more of your best sellers to meet demand.</li>`;
+        } else {
+          lessons += `<li><strong>Inventory:</strong> You had a good balance of inventory and sales (${Math.round(
+            sellThrough * 100
+          )}% sold).</li>`;
+        }
+
+        // Labor lessons
+        if (laborChoice === 1 && actualCustomers / baseCustomers < 0.5) {
+          lessons += `<li><strong>Labor:</strong> Working alone limited your customer capacity. Consider hiring help if you expect more customers.</li>`;
+        } else if (laborChoice > 1) {
+          if (profit < 50) {
+            lessons += `<li><strong>Labor:</strong> Your labor costs may have been too high for your sales volume. Try working alone or find ways to increase sales.</li>`;
+          } else {
+            lessons += `<li><strong>Labor:</strong> Hiring help allowed you to serve more customers, which contributed to your success.</li>`;
+          }
+        }
+
+        // Pricing lessons
+        let pricingOk = true;
+        if (inventory.balls.price > 6) {
+          lessons += `<li><strong>Pricing:</strong> Your rubber balls were priced too high for this basic product. Try keeping them under $6.</li>`;
+          pricingOk = false;
+        }
+        if (inventory.plush.price > 25) {
+          lessons += `<li><strong>Pricing:</strong> Your plush animals were priced at the high end. Consider if this matches your customer base.</li>`;
+          pricingOk = false;
+        }
+        if (inventory.games.price < 30) {
+          lessons += `<li><strong>Pricing:</strong> Your board games were priced below typical market value. You might be leaving money on the table.</li>`;
+          pricingOk = false;
+        }
+        if (inventory.rc.price < 60) {
+          lessons += `<li><strong>Pricing:</strong> Your RC cars were priced below their premium value. Consider if this was necessary to sell them.</li>`;
+          pricingOk = false;
+        }
+        if (pricingOk) {
+          lessons += `<li><strong>Pricing:</strong> Your pricing strategy worked well across all product categories.</li>`;
+        }
+
+        // Marketing lessons
+        if (marketingChoice === 1) {
+          lessons += `<li><strong>Marketing:</strong> You relied on walk-by traffic only. More marketing could have attracted additional customers.</li>`;
+        } else {
+          lessons += `<li><strong>Marketing:</strong> Your marketing investment helped attract ${Math.round(
+            (marketingChoice - 1) * 0.3 * 100
+          )}% more customers.</li>`;
+        }
+
+        // Final lesson based on profit
+        if (profit > 100) {
+          lessons += `<li><strong>Overall:</strong> Great job! You made a profit of $${Math.round(
+            profit
+          )} by balancing costs and revenue effectively.</li>`;
+        } else if (profit > 0) {
+          lessons += `<li><strong>Overall:</strong> You made a small profit. Review your decisions to see where you could improve efficiency.</li>`;
+        } else {
+          lessons += `<li><strong>Overall:</strong> You didn't make a profit this time. Review your costs vs. revenue and try to find a better balance.</li>`;
+        }
+
+        lessons += "</ul>";
+
+        document.getElementById("lessons-text").innerHTML = lessons;
+      }
+
+      // Restart simulation
+      function restartSimulation() {
+        // Reset all state variables
+        currentScene = 1;
+        locationChoice = null;
+        maxSpace = 0;
+        inventory.balls.quantity = 0;
+        inventory.plush.quantity = 0;
+        inventory.games.quantity = 0;
+        inventory.rc.quantity = 0;
+        laborChoice = null;
+        marketingChoice = null;
+        score = 0;
+
+        // Reset UI
+        document.querySelectorAll(".scenario-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.getElementById("scene-1").classList.add("active");
+
+        // Reset all selections
+        document.querySelectorAll(".option-card").forEach((card) => {
+          card.classList.remove("selected");
+        });
+
+        // Reset inventory inputs
+        document.getElementById("balls-quantity").value = 0;
+        document.getElementById("plush-quantity").value = 0;
+        document.getElementById("games-quantity").value = 0;
+        document.getElementById("rc-quantity").value = 0;
+        updateInventory();
+
+        // Reset price sliders
+        document.getElementById("balls-slider").value = 4;
+        document.getElementById("plush-slider").value = 18;
+        document.getElementById("games-slider").value = 35;
+        document.getElementById("rc-slider").value = 75;
+        document.getElementById("balls-price").textContent = "4.00";
+        document.getElementById("plush-price").textContent = "18.00";
+        document.getElementById("games-price").textContent = "35.00";
+        document.getElementById("rc-price").textContent = "75.00";
+
+        updateProgress();
+      }
+
+      // Initialize when page loads
+      window.onload = initSimulation;
+    </script>
+  </body>
+</html>
